@@ -59,7 +59,7 @@ export const personal = {
   availability: "Available for new projects",
 
   // 👉 REPLACE WITH YOUR BIO
-  bio: "I'm a self-driven software engineer with a strong focus on frontend development and AI integration. I build fast, beautiful web applications with React, Next.js, and TypeScript — then push them further by integrating AI capabilities through advanced prompt engineering. I'm currently expanding into backend engineering, working with Node.js and PostgreSQL to grow into a well-rounded full-stack developer. Every project I take on gets clean code, thoughtful design, and a great user experience.",
+  bio: "I'm a self-driven software engineer with a strong focus on frontend development and AI integration. I build fast, beautiful web applications with React, Next.js, and TypeScript, then push them further by integrating AI capabilities through advanced prompt engineering. I'm currently expanding into backend engineering, working with Node.js and PostgreSQL to grow into a well-rounded full-stack developer. Every project I take on gets clean code, thoughtful design, and a great user experience.",
 
   // 👉 REPLACE WITH YOUR DETAILS
   location: "Owerri, Imo State, Nigeria",
