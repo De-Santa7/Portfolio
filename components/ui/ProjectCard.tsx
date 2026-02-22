@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
 import type { Project } from "@/data/portfolio";
 
 interface ProjectCardProps {
@@ -24,21 +25,33 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       whileHover={{ y: -6 }}
       className="group flex flex-col rounded-2xl border border-white/8 bg-zinc-900 shadow-card overflow-hidden hover:border-white/15 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300"
     >
-      {/* Gradient image placeholder */}
-      <div
-        className={`relative h-44 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}
-      >
-        {/* Subtle grid overlay */}
-        <div className="absolute inset-0 dot-grid opacity-40" />
-        {/* Project initials */}
-        <span className="relative text-4xl font-black tracking-tighter text-white/10 select-none">
-          {project.title
-            .split(" ")
-            .map((w) => w[0])
-            .join("")
-            .slice(0, 3)}
-        </span>
-      </div>
+      {/* Card header — logo image or gradient placeholder */}
+      {project.image ? (
+        <div className="relative h-44 bg-white flex items-center justify-center overflow-hidden p-6">
+          <Image
+            src={project.image}
+            alt={`${project.title} logo`}
+            fill
+            className="object-contain p-6"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        </div>
+      ) : (
+        <div
+          className={`relative h-44 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}
+        >
+          {/* Subtle grid overlay */}
+          <div className="absolute inset-0 dot-grid opacity-40" />
+          {/* Project initials */}
+          <span className="relative text-4xl font-black tracking-tighter text-white/10 select-none">
+            {project.title
+              .split(" ")
+              .map((w) => w[0])
+              .join("")
+              .slice(0, 3)}
+          </span>
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-8 gap-4">

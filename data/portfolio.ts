@@ -13,6 +13,7 @@ export interface Project {
   github?: string;
   demo?: string;
   gradient: string; // Tailwind gradient classes for the card image area
+  image?: string;   // Optional logo/screenshot — shown instead of initials
 }
 
 export interface SkillGroup {
@@ -58,7 +59,7 @@ export const personal = {
   availability: "Available for new projects",
 
   // 👉 REPLACE WITH YOUR BIO
-  bio: "I'm a self-driven software engineer who builds at the intersection of full-stack development and artificial intelligence. I craft fast, reliable web applications with React, Next.js, Node.js, and PostgreSQL — then push them further by integrating AI capabilities through advanced prompt engineering. Every project I take on gets clean code, sensible architecture, and great user experience.",
+  bio: "I'm a self-driven software engineer with a strong focus on frontend development and AI integration. I build fast, beautiful web applications with React, Next.js, and TypeScript — then push them further by integrating AI capabilities through advanced prompt engineering. I'm currently expanding into backend engineering, working with Node.js and PostgreSQL to grow into a well-rounded full-stack developer. Every project I take on gets clean code, thoughtful design, and a great user experience.",
 
   // 👉 REPLACE WITH YOUR DETAILS
   location: "Owerri, Imo State, Nigeria",
@@ -70,8 +71,8 @@ export const personal = {
   cv: "/cv.pdf",
 
   // 👉 REPLACE WITH YOUR SOCIAL LINKS
-  github: "https://github.com/charlesmbama",
-  linkedin: "https://linkedin.com/in/ugochukwuziterembama",
+  github: "https://github.com/De-Santa7",
+  linkedin: "https://www.linkedin.com/in/ugochukwuzitere-mbama-3a2929338/",
   twitter: "https://twitter.com", // 👉 REPLACE WITH YOUR TWITTER / X HANDLE
 };
 
@@ -156,13 +157,15 @@ export const projects: Project[] = [
     gradient: "from-violet-500/20 via-indigo-500/10 to-transparent",
   },
   {
-    id: "task-manager",
-    title: "Task Management App",
+    id: "interview-iq",
+    title: "InterviewIQ",
     description:
-      "Full-stack productivity app with workspaces, drag-and-drop boards, real-time updates, and team collaboration features.",
-    tags: ["React", "Node.js", "Express", "PostgreSQL", "WebSocket"],
-    github: "https://github.com/charlesmbama",
+      "AI-powered interview coach — practice with real questions, voice answers, and role-specific practical challenges. Get a full hiring verdict powered by Groq AI.",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Groq AI"],
+    github: "https://github.com/De-Santa7/interview-coach",
+    demo: "https://interview-coach-3h2g.vercel.app",
     gradient: "from-emerald-500/20 via-teal-500/10 to-transparent",
+    image: "/interviewiq-logo.png",
   },
   {
     id: "ecommerce",

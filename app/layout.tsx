@@ -48,6 +48,13 @@ export const metadata: Metadata = {
       "Full-Stack Developer & Prompt Engineer from Nigeria.",
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 // ─── Root Layout ──────────────────────────────────────────────────────────────
@@ -57,6 +64,10 @@ export default function RootLayout({
   return (
     // dark class enforces dark mode — bg-zinc-950 is the base background
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.svg" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-zinc-950 text-zinc-50 overflow-x-hidden`}
       >
