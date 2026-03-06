@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, GraduationCap, Briefcase, ArrowRight } from "lucide-react";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { personal, stats } from "@/data/portfolio";
 
 export function About() {
+  const [avatarError, setAvatarError] = useState(false);
+
   return (
     <section id="about" className="py-24 md:py-32 bg-zinc-950">
       <div className="max-w-6xl mx-auto px-6">
@@ -30,15 +33,26 @@ export function About() {
               <div className="absolute -inset-4 rounded-3xl bg-accent/5 blur-2xl" />
 
               {/* Avatar card */}
-              <div className="relative rounded-2xl overflow-hidden aspect-square bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/8 avatar-glow">
+              <div className="relative isolate rounded-2xl overflow-hidden aspect-square bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/8 avatar-glow">
                 {/* Inner gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-zinc-950/50" />
 
                 {/* Grid overlay */}
                 <div className="absolute inset-0 dot-grid opacity-30" />
 
-                {/* Monogram */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                {/* Avatar photo (falls back to monogram on error / no upload) */}
+                {!avatarError && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src="/api/avatar"
+                    alt={personal.name}
+                    onError={() => setAvatarError(true)}
+                    className="absolute inset-0 w-full h-full object-cover z-10"
+                  />
+                )}
+
+                {/* Monogram fallback */}
+                <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 ${avatarError ? "" : "opacity-0"}`}>
                   <span className="text-8xl font-black tracking-tighter text-zinc-700 select-none">
                     UM
                   </span>

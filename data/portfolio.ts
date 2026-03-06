@@ -68,7 +68,7 @@ export const personal = {
   // 👉 REPLACE WITH YOUR CONTACT INFO
   email: "charlesjosephmbama@gmail.com",
   phone: "+234 810 643 4570",
-  cv: "/cv.pdf",
+  cv: "/api/cv",
 
   // 👉 REPLACE WITH YOUR SOCIAL LINKS
   github: "https://github.com/De-Santa7",
