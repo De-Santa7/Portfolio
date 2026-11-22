@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { personal } from "@/data/portfolio";
+import { AgentReplay } from "./AgentReplay";
 
 const links = [
   { label: "Work", href: "/#work" },
@@ -14,6 +16,7 @@ const links = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const isHome = usePathname() === "/"; // the agent needs the hero to perform
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,18 +38,23 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
-        scrolled || open ? "border-line bg-bg/80 backdrop-blur-md" : "border-transparent"
-      }`}
-    >
-      <nav aria-label="Main" className="container-page flex h-16 items-center justify-between">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
+      <nav
+        aria-label="Main"
+        className={`mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border pl-5 pr-2 transition-colors duration-300 ${
+          scrolled || open ? "border-line-strong bg-bg/85 backdrop-blur-md" : "border-line bg-bg/40"
+        }`}
+      >
         <Link href="/" className="font-mono text-sm font-semibold tracking-tight text-fg" onClick={() => setOpen(false)}>
           {personal.shortName.toLowerCase()}
           <span className="text-accent">_</span>
         </Link>
+        <span className="mr-auto ml-3 hidden items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 font-mono text-[11px] text-accent sm:inline-flex">
+          <span className="size-1.5 rounded-full bg-accent" />
+          open to work
+        </span>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-7 md:flex">
           {links.map((l) => (
             <li key={l.href}>
               <Link href={l.href} className="text-sm text-muted transition-colors hover:text-fg">
@@ -54,6 +62,11 @@ export function Navbar() {
               </Link>
             </li>
           ))}
+          {isHome && (
+            <li className="hidden lg:block">
+              <AgentReplay />
+            </li>
+          )}
           <li>
             <Link
               href="/#contact"
@@ -77,7 +90,7 @@ export function Navbar() {
       </nav>
 
       {open && (
-          <div id="mobile-menu" className="h-[calc(100dvh-4rem)] border-t border-line bg-bg md:hidden">
+          <div id="mobile-menu" className="mx-auto mt-2 max-w-6xl rounded-3xl border border-line-strong bg-bg/95 pb-6 backdrop-blur-md md:hidden">
             <ul className="container-page flex flex-col gap-1 pt-6">
               {[...links, { label: "Contact", href: "/#contact" }].map((l, i) => (
                 <li key={l.href} className="animate-rise" style={{ animationDelay: `${0.04 * i}s` }}>
@@ -92,6 +105,11 @@ export function Navbar() {
                 </li>
               ))}
             </ul>
+            {isHome && (
+              <div className="container-page pt-6">
+                <AgentReplay onStart={() => setOpen(false)} />
+              </div>
+            )}
           </div>
         )}
     </header>

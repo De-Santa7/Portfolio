@@ -1,6 +1,7 @@
 import { FadeUp } from "@/components/ui/FadeUp";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { DragTiles } from "@/components/ui/DragTiles";
+import { StackPlayground } from "@/components/ui/StackPlayground";
 import { TechIcon } from "@/components/ui/TechIcon";
 import { toolGroups } from "@/data/portfolio";
 import { iconPath } from "@/lib/icons";
@@ -22,6 +23,7 @@ export function Stack() {
           }
         />
 
+        <StackPlayground>
         <div className="grid gap-10 md:grid-cols-2 md:gap-x-12 md:gap-y-14">
           {toolGroups.map((g, i) => (
             <FadeUp key={g.category} delay={0.04 * i}>
@@ -53,6 +55,7 @@ export function Stack() {
             </FadeUp>
           ))}
         </div>
+        </StackPlayground>
       </div>
     </section>
   );

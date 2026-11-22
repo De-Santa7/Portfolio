@@ -6,6 +6,7 @@ import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { Architecture } from "@/components/ui/Architecture";
+import { TapedShot } from "@/components/ui/TapedShot";
 import { ProjectLinks, StackRow, Stats } from "@/components/ui/ProjectParts";
 import { projects } from "@/data/portfolio";
 
@@ -58,7 +59,8 @@ export default async function CaseStudyPage({ params }: Params) {
             <ArrowLeft className="size-3.5" /> All work
           </Link>
 
-          <header className="pb-14 md:pb-20">
+          <header className="grid gap-12 pb-14 md:pb-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+            <div>
             <p className="hero-rise mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">Case study</p>
             <h1 className="text-5xl font-semibold tracking-tight text-fg md:text-7xl">{project.title}</h1>
             <p className="mt-5 max-w-2xl text-balance text-xl leading-snug text-fg/90 md:text-2xl">{project.tagline}</p>
@@ -75,6 +77,10 @@ export default async function CaseStudyPage({ params }: Params) {
 
             <div className="mt-8">
               <ProjectLinks links={project.links} skip="case-study" />
+            </div>
+            </div>
+            <div className="hero-rise px-4 [--d:0.2s]">
+              <TapedShot file={project.shot.file} title={project.title} subtitle={project.shot.subtitle} caption={project.shot.caption} priority />
             </div>
           </header>
 

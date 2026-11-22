@@ -7,7 +7,7 @@ export const contentType = "image/png";
 
 // Social preview card, generated at build time. Keep colours in sync with globals.css.
 export default function OpengraphImage() {
-  const accent = "#fbbf24";
+  const accent = "#d97757";
   return new ImageResponse(
     (
       <div

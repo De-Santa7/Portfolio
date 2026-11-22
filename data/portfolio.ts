@@ -41,6 +41,8 @@ export interface Decision {
 export interface Project {
   slug: string;
   title: string;
+  /** Taped polaroid: drop public/<file>.png (or .jpg/.webp) in and it appears. */
+  shot: { file: string; subtitle: string; caption: string };
   status: string;
   tagline: string;
   summary: string;
@@ -89,6 +91,8 @@ export const personal = {
 
   github: "https://github.com/De-Santa7",
   linkedin: "https://www.linkedin.com/in/ugochukwuzitere-mbama-3a2929338/",
+  /** wa.me needs the international number without "+" or the leading 0: 0815… → 234815… */
+  whatsapp: "https://wa.me/2348158927490",
 
   /** e.g. "I reply within 48 hours." Leave empty to hide. */
   replyPromise: "", // TODO: add only if you'll keep the promise
@@ -143,6 +147,7 @@ export const projects: Project[] = [
   {
     slug: "studex",
     title: "StudEx",
+    shot: { file: "studex-screenshot", subtitle: "Campus marketplace · studex.com.ng", caption: "studex.com.ng · live" },
     status: "Live · Solo build",
     tagline: "A multi-vendor marketplace for Nigerian university students.",
     summary:
@@ -218,6 +223,7 @@ export const projects: Project[] = [
   {
     slug: "interviewiq",
     title: "InterviewIQ",
+    shot: { file: "interviewiq-screenshot", subtitle: "AI interview coach", caption: "interviewiq · live demo" },
     status: "Live demo",
     tagline: "An AI interview coach.",
     summary:
@@ -302,5 +308,6 @@ export const contact = {
 export const socials = [
   { label: "GitHub", href: personal.github },
   { label: "LinkedIn", href: personal.linkedin },
+  { label: "WhatsApp", href: personal.whatsapp },
   { label: "Email", href: `mailto:${personal.email}` },
 ];

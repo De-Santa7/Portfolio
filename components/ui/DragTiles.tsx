@@ -12,6 +12,7 @@ export function DragTiles({ children, className }: { children: React.ReactNode; 
 
   function onPointerDown(e: React.PointerEvent<HTMLUListElement>) {
     if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+    if (e.currentTarget.closest("[data-fallen]")) return; // tiles are on the floor
     const el = (e.target as HTMLElement).closest("li");
     if (!el || el.parentElement !== e.currentTarget) return;
     e.preventDefault();

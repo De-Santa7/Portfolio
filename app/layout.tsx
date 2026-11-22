@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Loader } from "@/components/Loader";
 import { RevealObserver } from "@/components/RevealObserver";
+import { Cursor } from "@/components/Cursor";
 import { personal, site } from "@/data/portfolio";
 import "./globals.css";
 
@@ -64,7 +65,7 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
         <script
@@ -73,11 +74,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden bg-bg font-sans text-fg antialiased`}
+        className="overflow-x-hidden bg-bg font-sans text-fg antialiased"
       >
         <Loader />
         {children}
         <RevealObserver />
+        <Cursor />
       </body>
     </html>
   );

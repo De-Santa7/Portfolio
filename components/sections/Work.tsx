@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Architecture } from "@/components/ui/Architecture";
+import { TapedShot } from "@/components/ui/TapedShot";
 import { ProjectLinks, StackRow, Stats } from "@/components/ui/ProjectParts";
 import { personal, projects } from "@/data/portfolio";
 
@@ -46,7 +47,8 @@ export function Work() {
               <ProjectLinks links={featured.links} />
             </div>
 
-            <div className="lg:self-start lg:sticky lg:top-24">
+            <div className="flex flex-col gap-10 pt-4 lg:self-start">
+              <TapedShot file={featured.shot.file} title={featured.title} subtitle={featured.shot.subtitle} caption={featured.shot.caption} />
               <Architecture compact />
             </div>
           </div>
@@ -59,18 +61,21 @@ export function Work() {
               key={p.slug}
               as="article"
               delay={0.05 * i}
-              className="grid gap-6 rounded-3xl border border-line bg-surface p-6 transition-colors hover:border-line-strong sm:p-8 md:grid-cols-[1fr_auto] md:items-end"
+              className="grid gap-10 rounded-3xl border border-line bg-surface p-6 transition-colors hover:border-line-strong sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-12 lg:p-10"
             >
-              <div>
+              <div className="flex flex-col gap-6">
+                <div>
                 <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">{p.status}</p>
                 <h3 className="text-2xl font-semibold tracking-tight text-fg">{p.title}</h3>
                 <p className="mt-1 text-fg/90">{p.tagline}</p>
                 <p className="mt-3 max-w-2xl leading-relaxed text-muted">{p.summary}</p>
-                <div className="mt-5">
-                  <StackRow tools={p.stack} />
                 </div>
+                <StackRow tools={p.stack} />
+                <ProjectLinks links={p.links} />
               </div>
-              <ProjectLinks links={p.links} />
+              <div className="px-2 pt-4 lg:px-4">
+                <TapedShot file={p.shot.file} title={p.title} subtitle={p.shot.subtitle} caption={p.shot.caption} />
+              </div>
             </FadeUp>
           ))}
         </div>

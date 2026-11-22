@@ -4,14 +4,14 @@
    Change --color-accent and the whole site follows: buttons, links, glows,
    selection, focus rings. Hover/soft/glow shades are derived from it.
    Contrast on --color-bg (#0a0a0b):
-     #fbbf24 amber → 11.9:1   ·   #a3e635 lime → 13.1:1   (both WCAG AAA)
+     #d97757 terracotta → 6.3:1 (AA)  ·  #fbbf24 amber → 11.9:1  ·  #a3e635 lime → 13.1:1
    Text ON the accent uses --color-on-accent (near-black), never white. */
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --color-accent: #fbbf24;
-  --color-accent-hover: color-mix(in oklab, var(--color-accent) 82%, white);
+  --color-accent: #d97757;
+  --color-accent-hover: color-mix(in oklab, var(--color-accent) 85%, white);
   --color-accent-soft: color-mix(in oklab, var(--color-accent) 12%, transparent);
   --color-accent-line: color-mix(in oklab, var(--color-accent) 35%, transparent);
   --color-on-accent: #0a0a0b;
@@ -27,19 +27,10 @@
   --color-muted: #a1a1aa;
   --color-subtle: #71717a;
 
-  --animate-loader-bar: loader-bar 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-  --animate-loader-out: loader-out 0.55s cubic-bezier(0.76, 0, 0.24, 1) 0.85s forwards;
   --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-blink: blink 1s steps(1) infinite;
 }
 
-@keyframes loader-bar {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-@keyframes loader-out {
-  to { transform: translateY(-100%); visibility: hidden; }
-}
 @keyframes rise {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: none; }
@@ -71,21 +62,232 @@ body {
   border-radius: 6px;
 }
 
-/* Intro loader: skipped on repeat visits in a session and for reduced motion
-   (an inline script in layout.tsx sets data-intro="skip" before first paint). */
+/* ─── Intro ───────────────────────────────────────────────────────────────────
+   Timeline: boot 0 → 1.7s, curtain lifts 1.7 → 2.25s, hero follows.
+   --intro is the delay everything on the hero waits for; it drops to ~0 when
+   the intro is skipped (repeat visit in a session, or reduced motion; an
+   inline script in layout.tsx sets data-intro="skip" before first paint). */
+:root { --intro: 2s; }
+html[data-intro="skip"] { --intro: 0.15s; }
 html[data-intro="skip"] .intro-loader { display: none; }
 
-/* Delay hero entrance until the loader lifts — only when the loader shows. */
-.hero-rise { animation: var(--animate-rise); animation-delay: calc(var(--d, 0s) + 1s); }
-html[data-intro="skip"] .hero-rise { animation-delay: var(--d, 0s); }
+@property --count {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
 
-/* Scroll reveals (see components/RevealObserver.tsx). Hidden only once the
-   observer is running, so content is never lost without JS. */
+.intro-loader { animation: intro-out 0.55s cubic-bezier(0.76, 0, 0.24, 1) 1.7s forwards; }
+.intro-line { transform: scaleX(0); animation: intro-line 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards; }
+.intro-stage { color: var(--color-muted); animation: intro-stage 0.3s ease forwards; }
+.intro-stage .intro-dot { transition: none; animation: intro-dot 0.3s ease forwards; animation-delay: inherit; }
+.intro-caret { animation: blink 0.8s steps(1) 3; }
+.intro-count {
+  font-size: clamp(5rem, 16vw, 12rem);
+  counter-reset: n var(--count);
+  animation: intro-count 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.intro-count::after { content: counter(n); }
+
+@keyframes intro-out   { to { transform: translateY(-100%); visibility: hidden; } }
+@keyframes intro-line  { to { transform: scaleX(1); } }
+@keyframes intro-stage { to { color: var(--color-fg); } }
+@keyframes intro-dot   { to { background: var(--color-accent); border-color: var(--color-accent); box-shadow: 0 0 14px var(--color-accent); } }
+@keyframes intro-count { to { --count: 100; } }
+
+/* Hero elements rise in after the intro. */
+.hero-rise { animation: var(--animate-rise); animation-delay: calc(var(--d, 0s) + var(--intro)); }
+
+/* The "agent" pass over the headline: a cursor sweeps the word and paints
+   the highlight behind it. The text itself is never hidden (it's the LCP). */
+.agent-mark {
+  position: relative;
+  display: inline-block;
+  padding-inline: 0.12em;
+  margin-inline: -0.04em;
+  color: var(--color-accent);
+  background: linear-gradient(var(--color-accent), var(--color-accent)) no-repeat left / 0% 100%;
+  animation: agent-paint 0.75s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--intro) + 0.55s) forwards;
+}
+/* The track spans the word, so translateX(100%) = the word's width; moving
+   the track (transform only) keeps the sweep on the compositor. */
+.agent-track {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  animation: agent-move 1.9s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--intro) + 0.2s) forwards;
+}
+.agent-cursor { position: absolute; top: 62%; left: 0; }
+@keyframes agent-paint {
+  to { background-size: 100% 100%; color: var(--color-on-accent); }
+}
+@keyframes agent-move {
+  0%   { opacity: 0; transform: translate(calc(-8% - 10px), 14px); }
+  18%  { opacity: 1; transform: translate(0, 0); }
+  58%  { opacity: 1; transform: translate(100%, 0); }
+  80%  { opacity: 1; transform: translate(calc(112% + 40px), 50px); }
+  100% { opacity: 0; transform: translate(calc(118% + 70px), 80px); }
+}
+
+/* "Run the agent" replay (components/ui/AgentReplay.tsx): the headline wipes
+   back in, the agent paints the word, then flies into the hero terminal.
+   --fly-x / --fly-y are measured in JS: word's right edge → terminal input. */
+html.replay .hero-h1 { animation: h1-wipe 0.7s cubic-bezier(0.65, 0, 0.35, 1) both; }
+html.replay .agent-mark { animation: agent-paint-r 0.9s cubic-bezier(0.65, 0, 0.35, 1) 1.05s forwards; }
+html.replay .agent-track { animation: agent-fly 3.6s cubic-bezier(0.65, 0, 0.35, 1) 0.55s forwards; }
+/* Must differ from agent-paint, or the minifier merges the two and the
+   replay can't restart (same animation name = no restart). */
+@keyframes agent-paint-r {
+  from { background-size: 0% 100%; color: var(--color-accent); }
+  to   { background-size: 100% 100%; color: var(--color-on-accent); }
+}
+@keyframes h1-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+@keyframes agent-fly {
+  0%   { opacity: 0; transform: translate(calc(-8% - 10px), 14px); }
+  12%  { opacity: 1; transform: translate(0, 0); }
+  40%  { opacity: 1; transform: translate(100%, 0); }
+  72%  { opacity: 1; transform: translate(calc(100% + var(--fly-x, 0px)), var(--fly-y, 0px)); }
+  78%  { opacity: 1; transform: translate(calc(100% + var(--fly-x, 0px)), var(--fly-y, 0px)) scale(0.8); }
+  84%  { opacity: 1; transform: translate(calc(100% + var(--fly-x, 0px)), var(--fly-y, 0px)); }
+  100% { opacity: 0; transform: translate(calc(100% + var(--fly-x, 0px) + 30px), calc(var(--fly-y, 0px) + 30px)); }
+}
+
+/* Guided tour (components/ui/agentTour.ts) */
+.tour-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 150;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.5));
+}
+.tour-bubble {
+  position: absolute;
+  top: 20px;
+  left: 18px;
+  white-space: nowrap;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  padding: 4px 8px;
+  font: 600 12px/1.3 var(--font-mono);
+}
+.tour-bubble:empty { display: none; }
+.tour-stop {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  z-index: 150;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-accent-line);
+  background: color-mix(in oklab, var(--color-bg) 90%, transparent);
+  backdrop-filter: blur(8px);
+  padding: 8px 8px 8px 14px;
+  font: 500 12px/1 var(--font-mono);
+  color: var(--color-fg);
+  cursor: pointer;
+}
+.tour-spin { color: var(--color-accent); display: inline-block; animation: spin 1.6s linear infinite; }
+.tour-stop-x {
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  padding: 4px 10px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Terminal prompt typing, pure CSS: width grows one character per step. */
+.type-in {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  width: 0;
+  animation: type-in var(--type-dur, 1.5s) steps(var(--chars), end) var(--type-delay, 0s) forwards;
+}
+@keyframes type-in { to { width: calc(var(--chars) * 1ch); } }
+
+/* ─── Custom cursor (components/Cursor.tsx; fine pointers only) ───────────── */
+html[data-cursor="on"],
+html[data-cursor="on"] * { cursor: none !important; }
+html[data-cursor="on"] :is(input, textarea, select, [contenteditable]) { cursor: text !important; }
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+html[data-cursor-visible] .cursor-dot,
+html[data-cursor-visible] .cursor-ring { opacity: 1; }
+.cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--color-accent); }
+.cursor-ring { width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+.cursor-ring > span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  font: 600 9px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: transparent;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s, border-color 0.25s, color 0.2s;
+}
+html[data-cursor-state="link"] .cursor-ring > span {
+  transform: scale(1.7);
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+html[data-cursor-state="drag"] .cursor-ring > span {
+  transform: scale(1.9);
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+html[data-cursor-state="drag"] .cursor-dot,
+html[data-cursor-state="text"] .cursor-dot,
+html[data-cursor-state="text"] .cursor-ring { opacity: 0; }
+html[data-cursor-down] .cursor-ring > span { transform: scale(0.8); }
+
+/* ─── Taped polaroid ─────────────────────────────────────────────────────── */
+.polaroid { transform: rotate(-2.5deg); transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.polaroid:hover { transform: rotate(-0.5deg) translateY(-4px); }
+.tape {
+  position: absolute;
+  top: -14px;
+  width: 96px;
+  height: 28px;
+  background: rgb(255 255 255 / 0.22);
+  backdrop-filter: blur(1px);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+  /* torn ends */
+  clip-path: polygon(3% 0, 97% 4%, 100% 30%, 96% 55%, 100% 82%, 97% 100%, 3% 96%, 0 70%, 4% 45%, 0 18%);
+}
+.tape-left { left: -22px; transform: rotate(-38deg); background: color-mix(in oklab, var(--color-accent) 45%, transparent); }
+.tape-right { right: -22px; transform: rotate(36deg); }
+
+/* Scroll reveals (see components/RevealObserver.tsx). Only elements the
+   observer is actively watching (data-pending) are hidden, so anything it
+   never saw (no JS, late-mounted content) is simply visible. */
 [data-reveal] {
   transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--reveal-delay, 0s);
 }
-html[data-reveal="on"] [data-reveal]:not([data-shown]) {
+[data-reveal][data-pending] {
   opacity: 0;
   transform: translateY(20px);
 }
@@ -97,6 +299,9 @@ html[data-reveal="on"] [data-reveal]:not([data-shown]) {
 @media (pointer: fine) {
   .stack-tile { cursor: grab; }
 }
+/* While physics (or the glide home) owns the transform, no CSS transition
+   may touch it: transitions outrank animations and would fight every frame. */
+.stack-play[data-physics] .stack-tile { z-index: 5; transition: border-color 0.2s, color 0.2s; will-change: transform; }
 .stack-tile[data-dragging] {
   z-index: 10;
   cursor: grabbing;

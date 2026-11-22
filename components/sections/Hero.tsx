@@ -28,9 +28,21 @@ export function Hero() {
 
           <p className="mb-3 font-mono text-sm text-accent">{personal.name}</p>
 
-          <h1 className="text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-fg sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+          <h1 className="hero-h1 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-fg sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
             {hero.headline.before}
-            <span className="text-accent">{hero.headline.highlight}</span>
+            <span className="agent-mark">
+              {hero.headline.highlight}
+              <span aria-hidden="true" className="agent-track">
+              <span className="agent-cursor">
+                <svg viewBox="0 0 16 16" className="size-5 drop-shadow" fill="var(--color-fg)">
+                  <path d="M2 1.5 14 7.2l-5.3 1.5L6.4 14z" stroke="var(--color-bg)" strokeWidth="1" />
+                </svg>
+                <span className="absolute left-4 top-4 rounded-md bg-accent px-1.5 py-0.5 font-mono text-[11px] font-semibold tracking-normal text-on-accent">
+                  agent
+                </span>
+              </span>
+              </span>
+            </span>
             {hero.headline.after}
           </h1>
 
