@@ -1,55 +1,152 @@
 /**
- * Guided tour run by the "agent": scrolls the page slowly from section to
- * section, points at what matters, presses the stack's drop button, and ends
- * at the bottom. Any wheel, touch, key or click on "stop" hands control back
- * to the visitor immediately. Plain DOM (no React), torn down completely.
+ * Guided tour run by the "agent". It moves around each section, pointing at
+ * the things that matter (with a focus ring), scrolling only when the next
+ * target is out of view; drops and lifts the stack; then fills in the
+ * contact form with an obviously fake demo request and points at "send".
+ * It never sends anything, and it clears the demo answers when it ends.
+ * Any wheel, touch, key or a click on "stop" hands control back at once.
+ * Plain DOM (no React), torn down completely.
  */
 
-interface Step {
+/** Contact listens for this and empties the form (see Contact.tsx). */
+export const CONTACT_RESET_EVENT = "contact:reset";
+
+type Say = string | ((el: HTMLElement) => string);
+
+interface Beat {
   sel: string;
-  say: string;
+  /** Which match to use when the selector finds several (default 0). */
+  nth?: number;
+  /** Or: the first match whose text contains this. */
+  text?: string;
+  say: Say;
+  /** Pause after arriving, ms. */
+  hold?: number;
   act?: (el: HTMLElement) => Promise<void>;
 }
 
-const steps: Step[] = [
+const demo = {
+  reason: "A product to build",
+  what: "Demo from the agent tour: a booking app for a campus barber, web + mobile, Paystack payments.",
+  timeline: "This month",
+  who: "The agent (demo, not a real request)",
+};
+
+// Built on demand (the page must exist), never at import time.
+const buildBeats = (): Beat[] => [
+  // Work
   { sel: "#work h3", say: "StudEx. I built it solo." },
-  { sel: "#work .polaroid", say: "It's live at studex.com.ng" },
+  { sel: "#work .polaroid", say: "It's live at studex.com.ng", hold: 1300 },
+  { sel: "#work article ul li", text: "Transfer API", say: "Vendor payouts, retried automatically." },
+  { sel: '#work figure[aria-label^="StudEx architecture"]', say: "One API serves web and mobile." },
   { sel: '#work a[href="/work/studex"]', say: "The full case study is here." },
+  { sel: "#work article h3", text: "InterviewIQ", say: "InterviewIQ, an AI interview coach." },
+  { sel: "#work .polaroid", nth: 1, say: "Try the live demo." },
+  // About
   { sel: "#about h2", say: "A bit about me." },
-  { sel: "#principles ol", say: "How I work with AI." },
+  { sel: "#about p", text: "whoami", say: "whoami: that's me." },
+  { sel: "#about p", text: "Claude Code daily", say: "Claude Code daily. I still read every diff." },
+  // How I work: visit every card
+  ...[0, 1, 2, 3].map((n) => ({
+    sel: "#principles li",
+    nth: n,
+    say: (el: HTMLElement) => el.querySelector("h3")?.textContent ?? "",
+    hold: 1200,
+  })),
+  // Stack
+  { sel: "#stack .stack-tile", nth: 0, say: "TypeScript everywhere." },
+  { sel: "#stack .stack-tile", text: "Claude Code", say: "My daily driver." },
   {
     sel: "#stack button[aria-pressed]",
     say: "Watch this.",
     act: async (el) => {
-      el.click();
+      click(el);
       await sleep(3400); // let the pile settle
       if (aborted) return;
       say("…and back up.");
-      document.querySelector<HTMLElement>("#stack button[aria-pressed]")?.click();
-      await sleep(1500);
+      const again = document.querySelector<HTMLElement>("#stack button[aria-pressed]");
+      if (again) click(again);
+      await sleep(2200);
     },
   },
-  { sel: "#contact form", say: "Four quick questions and you can reach me." },
+  // Contact: fill in a fake demo request, then point at send (never press it)
+  {
+    sel: `#contact input[name="reason"][value="${demo.reason}"] + span`,
+    say: "Let me fill this in for you.",
+    act: async (el) => {
+      click(el);
+      await sleep(500);
+    },
+  },
+  {
+    sel: "#contact textarea",
+    say: "Typing a demo request…",
+    act: async (el) => typeInto(el as HTMLTextAreaElement, demo.what),
+  },
+  {
+    sel: `#contact input[name="timeline"][value="${demo.timeline}"] + span`,
+    say: "Timeline.",
+    act: async (el) => {
+      click(el);
+      await sleep(400);
+    },
+  },
+  {
+    sel: "#contact #who",
+    say: "And who it's from.",
+    act: async (el) => typeInto(el as HTMLInputElement, demo.who),
+  },
+  {
+    sel: '#contact button[type="submit"]',
+    say: "Ready. This one's a demo, so I won't send it.",
+    hold: 2600,
+  },
 ];
 
 let aborted = false;
 let reduce = false;
 let cursor: HTMLDivElement | null = null;
 let bubble: HTMLSpanElement | null = null;
+let focused: HTMLElement | null = null;
 let cx = 0;
 let cy = 0;
 
 function sleep(ms: number) {
-  return new Promise<void>((r) => setTimeout(r, reduce ? Math.min(ms, 600) : ms));
+  return new Promise<void>((r) => setTimeout(r, reduce ? Math.min(ms, 500) : ms));
 }
 
 function say(text: string) {
   if (!bubble) return;
   bubble.textContent = text;
-  bubble.animate([{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], {
-    duration: 220,
-    easing: "ease-out",
-  });
+  if (text) bubble.animate([{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 220 });
+}
+
+function focusOn(el: HTMLElement | null) {
+  focused?.classList.remove("tour-focus");
+  focused = el;
+  el?.classList.add("tour-focus");
+}
+
+/** A visible "click": the cursor dips, then the element is clicked. */
+function click(el: HTMLElement) {
+  cursor?.animate(
+    [{ transform: `translate(${cx}px, ${cy}px)` }, { transform: `translate(${cx}px, ${cy}px) scale(0.8)` }, { transform: `translate(${cx}px, ${cy}px)` }],
+    { duration: 220 },
+  );
+  el.click();
+}
+
+/** Types into a React-controlled field: native setter + input event per char. */
+async function typeInto(el: HTMLInputElement | HTMLTextAreaElement, text: string) {
+  const proto = el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+  const set = Object.getOwnPropertyDescriptor(proto, "value")?.set;
+  if (!set) return;
+  for (let i = 1; i <= text.length; i++) {
+    if (aborted) return;
+    set.call(el, text.slice(0, i));
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+    await sleep(reduce ? 0 : 28);
+  }
 }
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -62,7 +159,7 @@ function scrollToY(y: number): Promise<void> {
     window.scrollTo(0, to);
     return Promise.resolve();
   }
-  const duration = Math.min(2600, Math.max(900, dist * 1.1)); // slow, like someone reading
+  const duration = Math.min(2400, Math.max(800, dist * 1.1)); // slow, like someone reading
   const start = performance.now();
   return new Promise((resolve) => {
     const frame = (now: number) => {
@@ -76,11 +173,19 @@ function scrollToY(y: number): Promise<void> {
   });
 }
 
+/** Glide to (x, y) along a slight arc, with speed scaled to distance. */
 async function moveCursor(x: number, y: number) {
   if (!cursor) return;
+  const dist = Math.hypot(x - cx, y - cy);
+  const mx = (x + cx) / 2;
+  const my = (y + cy) / 2 - Math.min(60, dist * 0.15);
   const anim = cursor.animate(
-    [{ transform: `translate(${cx}px, ${cy}px)` }, { transform: `translate(${x}px, ${y}px)` }],
-    { duration: reduce ? 1 : 650, easing: "cubic-bezier(0.65, 0, 0.35, 1)", fill: "forwards" },
+    [
+      { transform: `translate(${cx}px, ${cy}px)` },
+      { transform: `translate(${mx}px, ${my}px)` },
+      { transform: `translate(${x}px, ${y}px)` },
+    ],
+    { duration: reduce ? 1 : Math.min(1100, 380 + dist * 0.9), easing: "cubic-bezier(0.45, 0, 0.25, 1)", fill: "forwards" },
   );
   cx = x;
   cy = y;
@@ -131,35 +236,54 @@ export function startTour(onEnd: () => void): () => void {
     aborted = true;
     listeners.forEach(([t, fn]) => window.removeEventListener(t, fn));
     root.style.scrollBehavior = prevBehavior;
+    focusOn(null);
     cursor?.remove();
     stop.remove();
     cursor = null;
     bubble = null;
+    // Never leave the fake demo answers in the visitor's form.
+    window.dispatchEvent(new Event(CONTACT_RESET_EVENT));
     onEnd();
   }
 
   (async () => {
     say("Let me show you around.");
     await sleep(1200);
-    for (const s of steps) {
+    for (const b of buildBeats()) {
       if (aborted) return;
-      const el = document.querySelector<HTMLElement>(s.sel);
+      const all = Array.from(document.querySelectorAll<HTMLElement>(b.sel));
+      const el = b.text ? all.find((e) => e.textContent?.includes(b.text!)) : all[b.nth ?? 0];
       if (!el) continue;
+
+      // Scroll only when the target isn't comfortably in view.
+      let r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (r.top < vh * 0.14 || r.bottom > vh * 0.82) {
+        say("");
+        focusOn(null);
+        await scrollToY(window.scrollY + r.top - vh * 0.32);
+        if (aborted) return;
+        await sleep(200);
+        r = el.getBoundingClientRect();
+      }
+
+      // Leave the last thing before flying to the next, so the bubble never
+      // points at the wrong element mid-flight.
       say("");
-      await scrollToY(window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.3);
+      focusOn(null);
+      await moveCursor(r.left + Math.min(r.width * 0.4, 160), r.top + Math.min(r.height * 0.55, 34));
       if (aborted) return;
-      await sleep(250); // let the section's reveal start
-      const r = el.getBoundingClientRect();
-      await moveCursor(r.left + Math.min(r.width * 0.35, 180), r.top + Math.min(r.height * 0.5, 36));
+      focusOn(el);
+      say(typeof b.say === "function" ? b.say(el) : b.say);
+      if (b.act) await b.act(el);
       if (aborted) return;
-      say(s.say);
-      if (s.act) await s.act(el);
-      await sleep(1800);
+      await sleep(b.hold ?? 950);
     }
     if (aborted) return;
+    focusOn(null);
     say("");
     await scrollToY(document.documentElement.scrollHeight);
-    await moveCursor(window.innerWidth * 0.5, window.innerHeight * 0.6);
+    await moveCursor(window.innerWidth * 0.5, window.innerHeight * 0.55);
     say("That's everything. Your turn.");
     await sleep(2400);
     end();

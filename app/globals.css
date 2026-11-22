@@ -177,6 +177,12 @@ html.replay .agent-track { animation: agent-fly 3.6s cubic-bezier(0.65, 0, 0.35,
   font: 600 12px/1.3 var(--font-mono);
 }
 .tour-bubble:empty { display: none; }
+.tour-focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 5px;
+  border-radius: 10px;
+  transition: outline-offset 0.25s ease;
+}
 .tour-stop {
   position: fixed;
   bottom: 20px;

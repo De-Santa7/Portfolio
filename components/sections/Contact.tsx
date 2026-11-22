@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { contact, personal, socials } from "@/data/portfolio";
+import { CONTACT_RESET_EVENT } from "@/components/ui/agentTour";
 
 function Chips({
   name,
@@ -65,6 +66,19 @@ export function Contact() {
   const [who, setWho] = useState("");
   const [opened, setOpened] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // The agent tour fills this form with a demo request; it asks us to clear it after.
+  useEffect(() => {
+    const reset = () => {
+      setReason("");
+      setWhat("");
+      setTimeline("");
+      setWho("");
+      setOpened(false);
+    };
+    window.addEventListener(CONTACT_RESET_EVENT, reset);
+    return () => window.removeEventListener(CONTACT_RESET_EVENT, reset);
+  }, []);
 
   const ready = reason !== "" && what.trim().length > 0;
 
