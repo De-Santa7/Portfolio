@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { list, del } from "@vercel/blob";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 
-const ALLOWED_KEYS = ["avatar", "cv"];
+const ALLOWED_KEYS = ["cv"];
 
 export async function POST(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value ?? "";

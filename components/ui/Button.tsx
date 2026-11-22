@@ -1,66 +1,64 @@
-"use client";
+import Link from "next/link";
 
-import { motion } from "framer-motion";
+type Variant = "solid" | "outline" | "ghost";
 
-interface ButtonProps {
-  variant: "solid" | "outline";
-  children: React.ReactNode;
-  href?: string;
-  download?: string;
-  onClick?: () => void;
+const base =
+  "group inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-[background-color,border-color,color,transform] duration-200 active:scale-[0.98] select-none";
+
+const variants: Record<Variant, string> = {
+  solid: "bg-accent text-on-accent hover:bg-accent-hover",
+  outline: "border border-line-strong text-fg hover:border-accent-line hover:bg-accent-soft",
+  ghost: "text-muted hover:text-fg",
+};
+
+interface CommonProps {
+  variant?: Variant;
   className?: string;
-  type?: "button" | "submit";
+  children: React.ReactNode;
 }
 
-/**
- * Reusable animated button component.
- * - solid:   filled orange accent, glowing shadow on hover
- * - outline: transparent with border, brightens on hover
- */
-export function Button({
-  variant,
-  children,
-  href,
-  download,
-  onClick,
-  className = "",
-  type = "button",
-}: ButtonProps) {
-  const base =
-    "inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer select-none";
+type LinkProps = CommonProps & { href: string; download?: string; external?: boolean };
+type ButtonProps = CommonProps & {
+  href?: undefined;
+  onClick?: () => void;
+  type?: "button" | "submit";
+  disabled?: boolean;
+};
 
-  const variants = {
-    solid:
-      "bg-accent text-white hover:bg-accent-hover shadow-[0_4px_20px_rgba(249,115,22,0.35)] hover:shadow-[0_8px_30px_rgba(249,115,22,0.5)] hover:-translate-y-0.5 active:translate-y-0",
-    outline:
-      "border border-gray-300 text-gray-700 hover:text-gray-900 hover:border-gray-400 hover:bg-gray-50 hover:-translate-y-0.5 active:translate-y-0",
-  };
-
+/** Pill button. Pass `href` for a link (internal routes use next/link). */
+export function Button(props: LinkProps | ButtonProps) {
+  const { variant = "solid", className = "", children } = props;
   const classes = `${base} ${variants[variant]} ${className}`;
 
-  if (href) {
+  if (props.href !== undefined) {
+    const { href, download, external } = props;
+    if (external || download !== undefined || href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("/api/")) {
+      return (
+        <a
+          href={href}
+          download={download}
+          className={classes}
+          {...(external || href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
+          {children}
+        </a>
+      );
+    }
     return (
-      <motion.a
-        href={href}
-        download={download}
-        className={classes}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.97 }}
-      >
+      <Link href={href} className={classes}>
         {children}
-      </motion.a>
+      </Link>
     );
   }
 
   return (
-    <motion.button
-      type={type}
-      onClick={onClick}
-      className={classes}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.97 }}
+    <button
+      type={props.type ?? "button"}
+      onClick={props.onClick}
+      disabled={props.disabled}
+      className={`${classes} disabled:cursor-not-allowed disabled:opacity-40`}
     >
       {children}
-    </motion.button>
+    </button>
   );
 }

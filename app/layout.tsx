@@ -1,76 +1,83 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Loader } from "@/components/Loader";
+import { RevealObserver } from "@/components/RevealObserver";
+import { personal, site } from "@/data/portfolio";
 import "./globals.css";
 
-// ─── Fonts ────────────────────────────────────────────────────────────────────
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-// ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  // 👉 REPLACE WITH YOUR NAME AND TITLE
-  title: "Ugochukwuzitere Mbama | Full-Stack Developer & Prompt Engineer",
-  description:
-    "Portfolio of Ugochukwuzitere Mbama — a full-stack developer and prompt engineer building scalable web apps and AI-powered products with React, Next.js, Node.js, and TypeScript.",
+  metadataBase: new URL(site.url),
+  title: { default: site.title, template: `%s · ${personal.name}` },
+  description: site.description,
   keywords: [
-    "Ugochukwuzitere Mbama",
-    "Full-Stack Developer",
-    "Prompt Engineer",
-    "React",
+    personal.name,
+    "Full-stack developer",
+    "Prompt engineer",
+    "Claude Code",
+    "AI automation",
     "Next.js",
-    "Node.js",
-    "TypeScript",
+    "Django",
+    "React Native",
     "Nigeria",
-    "AI Integration",
   ],
-  authors: [{ name: "Ugochukwuzitere Mbama" }],
+  authors: [{ name: personal.name, url: site.url }],
+  creator: personal.name,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "Ugochukwuzitere Mbama | Full-Stack Developer & Prompt Engineer",
-    description:
-      "Building scalable web apps and AI-powered products.",
-    siteName: "Ugochukwuzitere Mbama Portfolio",
+    url: "/",
+    siteName: personal.name,
+    title: site.title,
+    description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ugochukwuzitere Mbama | Developer Portfolio",
-    description:
-      "Full-Stack Developer & Prompt Engineer from Nigeria.",
+    title: site.title,
+    description: site.description,
   },
   robots: { index: true, follow: true },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
-  },
+  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg", apple: "/favicon.svg" },
 };
 
-// ─── Root Layout ──────────────────────────────────────────────────────────────
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export const viewport: Viewport = {
+  themeColor: "#0a0a0b",
+  colorScheme: "dark",
+};
+
+// Runs before first paint: skip the intro on repeat visits and for reduced motion.
+const introScript = `try{var d=document.documentElement;if(sessionStorage.getItem('intro')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.intro='skip'}sessionStorage.setItem('intro','1')}catch(e){}`;
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: personal.name,
+  url: site.url,
+  jobTitle: personal.role,
+  address: { "@type": "PostalAddress", addressLocality: "Owerri", addressCountry: "NG" },
+  sameAs: [personal.github, personal.linkedin],
+  founder: { "@type": "Organization", name: "StudEx", url: "https://www.studex.com.ng" },
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="shortcut icon" href="/favicon.svg" />
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-white text-gray-900 overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden bg-bg font-sans text-fg antialiased`}
       >
+        <Loader />
         {children}
+        <RevealObserver />
       </body>
     </html>
   );

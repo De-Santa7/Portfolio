@@ -1,107 +1,57 @@
-"use client";
-
-import { motion, type Variants } from "framer-motion";
 import { ArrowDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { personal, stats } from "@/data/portfolio";
+import { SessionCard } from "@/components/ui/SessionCard";
+import { hero, personal } from "@/data/portfolio";
 
-const container: Variants = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
-  },
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as const },
-  },
-};
-
+/**
+ * Typographic hero. The h1 is never hidden (no opacity animation), so it
+ * paints immediately for LCP; only secondary elements rise in.
+ */
 export function Hero() {
-  const scrollToProjects = () =>
-    document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
-
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-white"
-    >
-      {/* Subtle dot grid */}
-      <div className="absolute inset-0 dot-grid opacity-60" />
+    <section id="top" className="relative isolate overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
+      <div aria-hidden="true" className="grid-bg absolute inset-0 -z-10" />
+      <div aria-hidden="true" className="accent-glow absolute -top-40 right-[-10%] -z-10 size-[42rem] opacity-70" />
 
-      {/* Single soft orange glow — top right */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-accent/8 blur-[140px] pointer-events-none" />
+      <div className="container-page grid items-center gap-14 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+        <div>
+          <p className="hero-rise mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs text-muted [--d:0s]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-line-strong px-3 py-1">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:hidden" />
+                <span className="relative inline-flex size-2 rounded-full bg-accent" />
+              </span>
+              {personal.availability}
+            </span>
+            <span>{personal.location}</span>
+          </p>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-32 text-center w-full">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="flex flex-col items-center gap-5"
-        >
-          {/* Name */}
-          <motion.div variants={item}>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tighter leading-[0.9] text-gray-900">
-              {personal.heroLine1}
-            </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tighter leading-[0.9] text-gradient mt-1">
-              {personal.heroLine2}
-            </h1>
-          </motion.div>
+          <p className="mb-3 font-mono text-sm text-accent">{personal.name}</p>
 
-          {/* Tagline */}
-          <motion.p variants={item} className="text-lg md:text-xl text-gray-500 max-w-xl leading-relaxed">
-            {personal.tagline}
-          </motion.p>
+          <h1 className="text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-fg sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            {hero.headline.before}
+            <span className="text-accent">{hero.headline.highlight}</span>
+            {hero.headline.after}
+          </h1>
 
-          {/* CTA Buttons */}
-          <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-4 mt-2">
-            <Button variant="solid" onClick={scrollToProjects}>
-              See my work
-              <ArrowDown className="w-4 h-4" />
+          <p className="hero-rise mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg [--d:0.1s]">
+            {hero.sub}
+          </p>
+
+          <div className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row [--d:0.2s]">
+            <Button href="/#work">
+              See the work
+              <ArrowDown className="size-4 transition-transform group-hover:translate-y-0.5" />
             </Button>
-            <Button
-              variant="outline"
-              href={personal.cv}
-              download="Ugochukwuzitere-Mbama-CV.pdf"
-            >
-              <Download className="w-4 h-4" />
+            <Button href={personal.cv} download={personal.cvFilename} variant="outline">
+              <Download className="size-4" />
               Download CV
             </Button>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Stats */}
-          <motion.div
-            variants={item}
-            className="flex flex-wrap justify-center gap-12 mt-10 pt-10 border-t border-gray-200 w-full max-w-lg"
-          >
-            {stats.map(({ value, label }) => (
-              <div key={label} className="flex flex-col items-center gap-0.5">
-                <span className="text-2xl font-bold text-gray-900">{value}</span>
-                <span className="text-xs text-gray-500 font-medium">{label}</span>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
+        <SessionCard />
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: 0.8 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" as const }}
-          className="w-px h-8 bg-gradient-to-b from-gray-300 to-transparent"
-        />
-      </motion.div>
     </section>
   );
 }

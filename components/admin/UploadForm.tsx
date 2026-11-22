@@ -161,7 +161,7 @@ function UploadCard({
       <button
         onClick={handleUpload}
         disabled={!file || status === "uploading"}
-        className="w-full bg-accent hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
+        className="w-full bg-accent hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed text-on-accent font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
       >
         {status === "uploading" ? "Uploading…" : `Upload ${title}`}
       </button>
@@ -205,7 +205,7 @@ export default function UploadForm() {
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-md">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-semibold text-white">Admin Panel</h1>
@@ -219,19 +219,7 @@ export default function UploadForm() {
         </button>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        <UploadCard
-          title="Photo"
-          subtitle="Your profile / About section photo"
-          accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-          acceptLabel="a photo"
-          endpoint="/api/upload-image"
-          fieldName="avatar"
-          blobKey="avatar"
-          successMessage="Photo updated! Refresh the homepage to see it."
-          maxSizeMB={4}
-          previewImage
-        />
+      <div className="grid gap-4">
         <UploadCard
           title="CV"
           subtitle="PDF, Word, or any document format"
