@@ -54,8 +54,7 @@ export const personal = {
   heroLine2: "Mbama.",              // Second line — displayed in accent color
   shortName: "Zitere",             // Used in navbar logo
 
-  // 👉 REPLACE WITH YOUR TAGLINE
-  tagline: "Building full-stack web apps & AI-powered products.",
+  tagline: "I build fast web apps and ship real products — with React, Next.js, and a bit of AI.",
   availability: "Available for new projects",
 
   // 👉 REPLACE WITH YOUR BIO
@@ -80,10 +79,9 @@ export const personal = {
 
 // 👉 UPDATE YOUR STATS
 export const stats: Stat[] = [
-  { value: "2+",  label: "Years Building" },
-  { value: "10+", label: "Projects Shipped" },
+  { value: "2+", label: "Years Building" },
+  { value: "4",  label: "Projects Built" },
   { value: "12+", label: "Technologies" },
-  { value: "∞",   label: "Problems Solved" },
 ];
 
 // ─── Social Links ─────────────────────────────────────────────────────────────
@@ -139,61 +137,25 @@ export const skillGroups: SkillGroup[] = [
 // 👉 ADD YOUR PROJECTS HERE
 export const projects: Project[] = [
   {
-    id: "auth-api",
-    title: "FullStack Auth API",
+    id: "studexng",
+    title: "Studex.ng",
     description:
-      "Production-ready authentication system with JWT access/refresh tokens, role-based access control, email verification, and password reset flows.",
-    tags: ["Node.js", "Express", "PostgreSQL", "Prisma", "JWT"],
-    github: "https://github.com/charlesmbama",
-    gradient: "from-orange-500/20 via-rose-500/10 to-transparent",
-  },
-  {
-    id: "ai-assistant",
-    title: "AI Chat Assistant",
-    description:
-      "Full-stack conversational AI app with streaming responses, conversation history, and context management — built with Claude API integration.",
-    tags: ["Next.js", "TypeScript", "Claude API", "Prisma", "PostgreSQL"],
-    github: "https://github.com/charlesmbama",
-    gradient: "from-violet-500/20 via-indigo-500/10 to-transparent",
+      "Campus marketplace for Nigerian university students. Connects students with verified on-campus vendors — food delivery, laundry, beauty, photography. Includes vendor dashboards, cart, Paystack payments, and an admin panel.",
+    tags: ["Next.js", "TypeScript", "Firebase", "Django", "Paystack"],
+    github: "https://github.com/studexng-svg/studexng",
+    demo: "https://www.studex.com.ng",
+    gradient: "from-blue-500/20 via-indigo-500/10 to-transparent",
   },
   {
     id: "interview-iq",
     title: "InterviewIQ",
     description:
-      "AI-powered interview coach — practice with real questions, voice answers, and role-specific practical challenges. Get a full hiring verdict powered by Groq AI.",
+      "AI-powered interview coach — practice with real questions, voice answers, and role-specific challenges. Gives a full hiring verdict powered by Groq AI.",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Groq AI"],
     github: "https://github.com/De-Santa7/interview-coach",
     demo: "https://interview-coach-3h2g.vercel.app",
-    gradient: "from-emerald-500/20 via-teal-500/10 to-transparent",
+    gradient: "from-orange-500/20 via-amber-500/10 to-transparent",
     image: "/interviewiq-logo.png",
-  },
-  {
-    id: "ecommerce",
-    title: "E-Commerce Platform",
-    description:
-      "Scalable online store with product catalog, cart management, Stripe payment integration, and an admin dashboard for inventory.",
-    tags: ["Next.js", "TypeScript", "Stripe", "PostgreSQL", "Prisma"],
-    github: "https://github.com/charlesmbama",
-    demo: "#",
-    gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
-  },
-  {
-    id: "portfolio-cms",
-    title: "Portfolio CMS",
-    description:
-      "Headless CMS and portfolio site builder — authors manage content through a rich dashboard while visitors get a blazing-fast SSG frontend.",
-    tags: ["Next.js", "Prisma", "PostgreSQL", "React", "TypeScript"],
-    github: "https://github.com/charlesmbama",
-    gradient: "from-amber-500/20 via-yellow-500/10 to-transparent",
-  },
-  {
-    id: "weather-dashboard",
-    title: "Weather Dashboard",
-    description:
-      "Real-time weather application with location search, 7-day forecasts, interactive charts, and geolocation — consuming multiple REST APIs.",
-    tags: ["React", "TypeScript", "REST API", "Chart.js", "Tailwind"],
-    github: "https://github.com/charlesmbama",
-    gradient: "from-sky-500/20 via-blue-500/10 to-transparent",
   },
 ];
 

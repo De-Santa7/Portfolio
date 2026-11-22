@@ -62,14 +62,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    // dark class enforces dark mode — bg-zinc-950 is the base background
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.svg" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-zinc-950 text-zinc-50 overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-white text-gray-900 overflow-x-hidden`}
       >
         {children}
       </body>

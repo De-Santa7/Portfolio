@@ -33,7 +33,7 @@ export function Button({
     solid:
       "bg-accent text-white hover:bg-accent-hover shadow-[0_4px_20px_rgba(249,115,22,0.35)] hover:shadow-[0_8px_30px_rgba(249,115,22,0.5)] hover:-translate-y-0.5 active:translate-y-0",
     outline:
-      "border border-white/15 text-zinc-300 hover:text-white hover:border-white/30 hover:bg-white/5 hover:-translate-y-0.5 active:translate-y-0",
+      "border border-gray-300 text-gray-700 hover:text-gray-900 hover:border-gray-400 hover:bg-gray-50 hover:-translate-y-0.5 active:translate-y-0",
   };
 
   const classes = `${base} ${variants[variant]} ${className}`;

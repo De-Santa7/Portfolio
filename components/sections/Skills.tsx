@@ -14,36 +14,29 @@ const stagger: Variants = {
 
 export function Skills() {
   return (
-    <section id="skills" className="py-24 md:py-32 bg-zinc-900/40">
+    <section id="skills" className="py-24 md:py-32 bg-orange-50/60">
       <div className="max-w-6xl mx-auto px-6">
 
-        {/* Header */}
         <FadeUp>
-          <p className="text-sm font-semibold text-accent uppercase tracking-widest mb-4">
-            02 — Skills
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-50 mb-4">
-            My Toolkit
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+            Tools & Tech
           </h2>
-          <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl mb-16">
-            Technologies and tools I use to build things people love.
+          <p className="text-lg text-gray-500 leading-relaxed max-w-2xl mb-16">
+            What I reach for when I&apos;m building something.
           </p>
         </FadeUp>
 
-        {/* Skill groups */}
         <div className="flex flex-col gap-14">
           {skillGroups.map((group, gi) => (
             <FadeUp key={group.category} delay={gi * 0.1}>
               <div>
-                {/* Category label */}
                 <div className="flex items-center gap-4 mb-6">
-                  <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest">
                     {group.category}
                   </h3>
-                  <div className="flex-1 h-px bg-white/6" />
+                  <div className="flex-1 h-px bg-gray-200" />
                 </div>
 
-                {/* Badges */}
                 <motion.div
                   variants={stagger}
                   initial="hidden"

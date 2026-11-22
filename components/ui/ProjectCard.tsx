@@ -10,11 +10,6 @@ interface ProjectCardProps {
   index: number;
 }
 
-/**
- * Project card with gradient image area, title, description,
- * tech tags, and GitHub / Live Demo buttons.
- * Lifts and glows on hover.
- */
 export function ProjectCard({ project, index }: ProjectCardProps) {
   return (
     <motion.article
@@ -23,11 +18,11 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" as const }}
       whileHover={{ y: -6 }}
-      className="group flex flex-col rounded-2xl border border-white/8 bg-zinc-900 shadow-card overflow-hidden hover:border-white/15 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-all duration-300"
+      className="group flex flex-col rounded-2xl border border-gray-200 bg-white shadow-card overflow-hidden hover:border-orange-200 hover:shadow-[0_20px_60px_rgba(249,115,22,0.12)] transition-all duration-300"
     >
-      {/* Card header — logo image or gradient placeholder */}
+      {/* Card header */}
       {project.image ? (
-        <div className="relative h-44 bg-white flex items-center justify-center overflow-hidden p-6">
+        <div className="relative h-44 bg-orange-50 flex items-center justify-center overflow-hidden p-6">
           <Image
             src={project.image}
             alt={`${project.title} logo`}
@@ -40,10 +35,8 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         <div
           className={`relative h-44 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}
         >
-          {/* Subtle grid overlay */}
-          <div className="absolute inset-0 dot-grid opacity-40" />
-          {/* Project initials */}
-          <span className="relative text-4xl font-black tracking-tighter text-white/10 select-none">
+          <div className="absolute inset-0 dot-grid opacity-30" />
+          <span className="relative text-4xl font-black tracking-tighter text-gray-900/10 select-none">
             {project.title
               .split(" ")
               .map((w) => w[0])
@@ -55,11 +48,11 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-8 gap-4">
-        <h3 className="text-lg font-bold text-zinc-50 group-hover:text-white transition-colors duration-200">
+        <h3 className="text-lg font-bold text-gray-900 group-hover:text-accent transition-colors duration-200">
           {project.title}
         </h3>
 
-        <p className="text-sm text-zinc-400 leading-relaxed flex-1">
+        <p className="text-sm text-gray-500 leading-relaxed flex-1">
           {project.description}
         </p>
 
@@ -68,7 +61,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-800 text-zinc-400 border border-white/5"
+              className="px-2.5 py-1 rounded-md text-xs font-medium bg-orange-50 text-gray-600 border border-orange-200"
             >
               {tag}
             </span>
@@ -85,7 +78,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               aria-label={`${project.title} on GitHub`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold border border-white/10 text-zinc-400 hover:text-zinc-100 hover:border-white/20 hover:bg-white/5 transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
             >
               <Github className="w-3.5 h-3.5" />
               GitHub
