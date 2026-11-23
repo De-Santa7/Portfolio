@@ -39,29 +39,40 @@ export function PaperPlane({ flight }: { flight: Flight }) {
         />
       </svg>
       <div className="plane" style={{ offsetPath: `path('${flight.path}')` } as CSSProperties}>
-        {/* Paper plane, nose pointing right (offset-rotate: auto turns it along the path). */}
-        <svg viewBox="0 0 32 32" width="34" height="34">
-          <path d="M2 15.5 30 4 22 28l-7.5-7.2L2 15.5Z" fill="var(--color-fg)" stroke="var(--color-bg)" strokeWidth="1" strokeLinejoin="round" />
-          <path d="M14.5 20.8 30 4 11 18.2l3.5 2.6Z" fill="var(--color-accent)" />
-          <path d="M14.5 20.8 13.6 27l3.6-3.6" fill="color-mix(in oklab, var(--color-fg) 70%, black)" />
+        {/* Paper dart seen from above. The nose is the exact right-centre point
+            (40,12), so with offset-rotate: auto the nose always leads along
+            the path, and the tail (left edge) is where the trail comes out. */}
+        <svg viewBox="0 0 40 24" width="46" height="28">
+          {/* far wing (darker, underneath) */}
+          <path d="M40 12 L3 22 L12 12 Z" fill="color-mix(in oklab, var(--color-fg) 62%, black)" />
+          {/* near wing */}
+          <path d="M40 12 L0 1.5 L12 12 Z" fill="var(--color-fg)" />
+          {/* centre fold / keel */}
+          <path d="M40 12 L12 12 L8 15.5 Z" fill="var(--color-accent)" />
+          <path d="M40 12 L0 1.5 L12 12 L3 22 Z" fill="none" stroke="var(--color-bg)" strokeWidth="0.8" strokeLinejoin="round" />
         </svg>
       </div>
     </div>
   );
 }
 
-/** Builds a flight path from the button to off the top-right of the container. */
+/**
+ * Builds a flight path in the container's pixel space: the plane leaves the
+ * send button heading right, dips a touch as it's launched, climbs, and
+ * flies off past the right edge of the screen.
+ */
 export function planFlight(container: HTMLElement, from: HTMLElement): Flight {
   const c = container.getBoundingClientRect();
   const b = from.getBoundingClientRect();
   const x = b.left - c.left + b.width / 2;
   const y = b.top - c.top + b.height / 2;
-  const W = c.width;
+  const toScreenEdge = window.innerWidth - (c.left + x);
+  const ex = x + Math.max(420, toScreenEdge + 160);
+  const ey = y - Math.min(460, Math.max(300, ex - x) * 0.55);
   const r = (n: number) => Math.round(n);
-  // Take off left and up, curl over, then shoot off past the top-right corner.
   const path =
     `M ${r(x)} ${r(y)} ` +
-    `C ${r(x - 170)} ${r(y + 10)}, ${r(x - 210)} ${r(y - 170)}, ${r(x - 70)} ${r(y - 185)} ` +
-    `C ${r(x + 70)} ${r(y - 200)}, ${r(W - 40)} ${r(y - 70)}, ${r(W + 280)} ${r(-140)}`;
-  return { path, w: r(W), h: r(c.height), id: Date.now() };
+    `C ${r(x + 60)} ${r(y + 22)}, ${r(x + 150)} ${r(y + 12)}, ${r(x + 230)} ${r(y - 45)} ` +
+    `S ${r(ex - 150)} ${r(ey + 110)}, ${r(ex)} ${r(ey)}`;
+  return { path, w: r(c.width), h: r(c.height), id: Date.now() };
 }

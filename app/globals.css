@@ -191,18 +191,29 @@ html.replay .agent-track { animation: agent-fly 3.6s cubic-bezier(0.65, 0, 0.35,
   offset-rotate: auto;
   offset-anchor: 50% 50%;
   filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.5));
-  animation: plane-fly 1.9s cubic-bezier(0.55, 0.05, 0.7, 0.35) forwards;
+  /* gentle launch, then it picks up speed */
+  animation: plane-fly 1.8s cubic-bezier(0.45, 0, 0.75, 0.4) forwards;
 }
 .plane-trail-draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: trail-draw 1.9s cubic-bezier(0.55, 0.05, 0.7, 0.35) forwards;
+  animation: trail-draw 1.8s cubic-bezier(0.45, 0, 0.75, 0.4) forwards;
 }
-.plane-trail { animation: trail-fade 0.9s ease 1.9s forwards; }
+.plane-trail { animation: trail-fade 0.9s ease 1.6s forwards; }
+/* Position along the path lives on .plane; size lives on the inner svg.
+   (CSS applies `scale` around the offset-path translation, so scaling the
+   same element would drag the plane off its own trail.) */
 @keyframes plane-fly {
-  0%   { offset-distance: 0%; opacity: 0; scale: 0.5; }
-  10%  { opacity: 1; scale: 1; }
-  100% { offset-distance: 100%; opacity: 1; scale: 1.15; }
+  0%   { offset-distance: 0%;   opacity: 0; }
+  6%   { opacity: 1; }
+  75%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+.plane > svg { animation: plane-size 1.8s cubic-bezier(0.45, 0, 0.75, 0.4) forwards; }
+@keyframes plane-size {
+  0%   { transform: scale(0.7); }
+  6%   { transform: scale(1); }
+  100% { transform: scale(0.45); } /* flying away from us */
 }
 @keyframes trail-draw { to { stroke-dashoffset: 0; } }
 @keyframes trail-fade { to { opacity: 0; } }
