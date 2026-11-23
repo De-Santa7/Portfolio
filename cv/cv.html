@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ugochukwuzitere Mbama — CV</title>
+<!--
+  Source for cv/Ugochukwuzitere-Mbama-CV.pdf. Edit this file, then regenerate:
+  chrome --headless=new --no-pdf-header-footer --print-to-pdf=cv/Ugochukwuzitere-Mbama-CV.pdf cv/cv.html
+  Designed to match the portfolio: Geist + Geist Mono, near-black header,
+  terracotta accent (darkened for print), mono "01 / section" labels.
+  All text is real text, so applicant-tracking systems can read it.
+-->
+<style>
+  @font-face { font-family: "Geist"; src: url("fonts/Geist.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("fonts/GeistMono.woff2") format("woff2"); font-weight: 100 900; }
+
+  @page { size: A4; margin: 0; }
+  :root {
+    --ink: #1c1917;
+    --muted: #57534e;
+    --soft: #78716c;
+    --line: #e7e2dc;
+    --accent: #b4552f;       /* print accent: terracotta, darkened for white paper */
+    --accent-bright: #d97757; /* the portfolio's accent, used on the dark header */
+    --night: #0a0a0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 210mm; height: 297mm; }
+  body {
+    font-family: "Geist", "Segoe UI", system-ui, sans-serif;
+    font-size: 8.6pt;
+    line-height: 1.42;
+    color: var(--ink);
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  header {
+    /* the portfolio's soft orange glow, top right, as a plain background */
+    background: radial-gradient(48mm 48mm at 92% 2%, rgba(217,119,87,0.26), transparent 100%), var(--night);
+    color: #f4f4f5;
+    padding: 10.5mm 14mm 7.5mm;
+  }
+  .kicker { font-size: 7.6pt; text-transform: uppercase; color: var(--accent-bright); }
+  h1 { font-size: 25pt; font-weight: 650; letter-spacing: -0.025em; line-height: 1.05; margin-top: 1.8mm; }
+  .tagline { margin-top: 2.6mm; font-size: 11pt; color: #d4d4d8; letter-spacing: -0.005em; }
+  .tagline mark { background: var(--accent-bright); color: var(--night); padding: 0 0.12em; }
+  .contact {
+    margin-top: 4.2mm;
+    padding-top: 3mm;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    display: flex; flex-wrap: wrap; gap: 1.6mm 5mm;
+    font-size: 7.6pt; color: #a1a1aa;
+  }
+  .contact span b { color: #f4f4f5; font-weight: 500; }
+  .contact .dot { color: var(--accent-bright); margin-right: 1.4mm; }
+
+  /* ── Body ───────────────────────────────────────────────── */
+  main {
+    display: grid;
+    grid-template-columns: 1fr 57mm;
+    gap: 9mm;
+    padding: 7mm 14mm 0;
+  }
+  section + section { margin-top: 4.6mm; }
+  .label {
+    display: flex; align-items: center; gap: 2.4mm;
+    font-family: "Geist Mono", monospace;
+    font-size: 7pt; text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 2.8mm;
+  }
+  .label i { font-style: normal; color: var(--accent); }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  p.lead { color: var(--ink); }
+  p.lead + p.lead { margin-top: 1.6mm; }
+
+  .role + .role { margin-top: 3.6mm; }
+  .role-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+  .role h3 { font-size: 10.2pt; font-weight: 620; letter-spacing: -0.01em; }
+  .role h3 em { font-style: normal; color: var(--accent); }
+  .when { font-family: "Geist Mono", monospace; font-size: 7.2pt; color: var(--soft); white-space: nowrap; }
+  .sub { color: var(--muted); font-size: 8.4pt; margin-top: 0.4mm; }
+  .stats { display: flex; gap: 2mm; margin: 2.2mm 0 1.6mm; }
+  .stat { border: 1px solid var(--line); border-radius: 2mm; padding: 1.2mm 2.6mm; }
+  .stat b { font-size: 10pt; font-weight: 650; letter-spacing: -0.01em; }
+  .stat span { color: var(--muted); font-size: 7.4pt; margin-left: 1mm; }
+  ul.points { list-style: none; margin-top: 1.6mm; }
+  ul.points li {
+    padding-left: 4.2mm;
+    background: linear-gradient(var(--accent), var(--accent)) no-repeat 0 0.62em / 2.2mm 1px;
+  }
+  ul.points li + li { margin-top: 0.8mm; }
+  .stackline { margin-top: 1.6mm; font-family: "Geist Mono", monospace; font-size: 7pt; color: var(--soft); }
+
+  .project + .project { margin-top: 2.6mm; }
+  .project h3 { font-size: 9.6pt; font-weight: 620; }
+  .project h3 a { color: var(--accent); font-weight: 500; font-size: 7.6pt; margin-left: 1.5mm; font-family: "Geist Mono", monospace; }
+
+  /* sidebar */
+  .group + .group { margin-top: 2.8mm; }
+  .group h4 { font-family: "Geist Mono", monospace; font-size: 6.8pt; font-weight: 500; text-transform: uppercase; color: var(--soft); margin-bottom: 1.2mm; }
+  .chips { display: flex; flex-wrap: wrap; gap: 1.1mm; }
+  .chips span { border: 1px solid var(--line); border-radius: 1.6mm; padding: 0.5mm 1.7mm; font-size: 7.7pt; }
+  .chips span.hot { border-color: rgba(180,85,47,0.45); color: var(--accent); }
+
+  ol.rules { list-style: none; counter-reset: r; }
+  ol.rules li { counter-increment: r; display: grid; grid-template-columns: 6mm 1fr; }
+  ol.rules li + li { margin-top: 1.6mm; }
+  ol.rules li::before { content: "0" counter(r); grid-row: span 2; padding-top: 0.15em; font-family: "Geist Mono", monospace; font-size: 7pt; color: var(--accent); }
+  ol.rules b { font-weight: 620; display: block; }
+  ol.rules span { grid-column: 2; color: var(--muted); font-size: 8.1pt; }
+
+  .motto {
+    margin-top: 4mm;
+    border-left: 2px solid var(--accent);
+    padding: 0.6mm 0 0.6mm 3mm;
+    font-style: italic; font-size: 9pt; color: var(--ink);
+  }
+  .motto small { display: block; font-style: normal; font-family: "Geist Mono", monospace; font-size: 6.8pt; color: var(--soft); margin-top: 0.8mm; text-transform: uppercase; }
+
+  footer {
+    position: fixed; left: 14mm; right: 14mm; bottom: 8mm;
+    display: flex; justify-content: space-between;
+    border-top: 1px solid var(--line); padding-top: 2.4mm;
+    font-family: "Geist Mono", monospace; font-size: 6.6pt; color: var(--soft);
+    white-space: nowrap;
+  }
+  footer b { color: var(--accent); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker mono">Full-stack developer · Prompt engineer</div>
+  <h1>Ugochukwuzitere Mbama</h1>
+  <p class="tagline">I build complete products, and the <mark>automations</mark> that keep them running.</p>
+  <div class="contact mono">
+    <span><span class="dot">●</span><a href="mailto:charlesjosephmbama@gmail.com"><b>charlesjosephmbama@gmail.com</b></a></span>
+    <span><span class="dot">●</span><a href="https://wa.me/2348158927490"><b>+234 815 892 7490</b></a> (WhatsApp)</span>
+    <span><span class="dot">●</span>Owerri, Nigeria · WAT (UTC+1)</span>
+    <span><span class="dot">●</span><a href="https://portfolio-sage-phi-22.vercel.app"><b>portfolio-sage-phi-22.vercel.app</b></a></span>
+    <span><span class="dot">●</span><a href="https://github.com/De-Santa7"><b>github.com/De-Santa7</b></a></span>
+    <span><span class="dot">●</span><a href="https://www.linkedin.com/in/ugochukwuzitere-mbama-3a2929338/"><b>linkedin.com/in/ugochukwuzitere-mbama</b></a></span>
+  </div>
+</header>
+
+<main>
+  <div>
+    <section>
+      <div class="label"><i>01</i> / Profile</div>
+      <p class="lead">
+        Full-stack developer and prompt engineer who ships whole products. I designed, built and run
+        <b>StudEx</b>, a multi-vendor campus marketplace, on my own: the Django REST API and Postgres schema, the
+        Paystack payment and payout flow, the Next.js web app and the Expo mobile app.
+      </p>
+      <p class="lead">
+        I use Claude Code every day to plan, write and test software, and I read every diff before it ships.
+        Open to full-stack, frontend and AI-automation roles, and to freelance work.
+      </p>
+    </section>
+
+    <section>
+      <div class="label"><i>02</i> / Experience</div>
+
+      <div class="role">
+        <div class="role-head">
+          <h3>Founder &amp; Full-Stack Developer · <em>StudEx</em></h3>
+          <span class="when">Solo build · Live</span>
+        </div>
+        <div class="sub">Multi-vendor marketplace for Nigerian university students · studex.com.ng · CAC‑registered</div>
+        <div class="stats">
+          <div class="stat"><b>100+</b><span>active vendors</span></div>
+          <div class="stat"><b>320+</b><span>listings</span></div>
+          <div class="stat"><b>3</b><span>campuses</span></div>
+        </div>
+        <ul class="points">
+          <li>Built the payment flow on Paystack: buyer payments are held until an order completes, then vendors are paid
+            out through the Transfer API. Moved payouts off subaccount split settlement to make them near-instant.</li>
+          <li>Automated operations with APScheduler: open orders auto-complete after 7 days and failed transfers are
+            retried on a schedule.</li>
+          <li>One Django REST Framework API with JWT auth serves both the Next.js / TypeScript web app and the Expo /
+            React Native app (Zustand, Paystack checkout, push notifications via Firebase Cloud Messaging).</li>
+          <li>Students verified by 11-digit matric number. Infrastructure: Vercel, Render, Neon Postgres, Cloudinary,
+            Cloudflare.</li>
+        </ul>
+      </div>
+
+      <div class="role">
+        <div class="role-head">
+          <h3>Freelance Full-Stack Developer · <em>Self-employed</em></h3>
+          <span class="when">Jul 2023 – Present</span>
+        </div>
+        <ul class="points">
+          <li>Build web apps with React, Next.js, TypeScript and Tailwind CSS, on REST APIs in Node.js / Express or Django.</li>
+          <li>Design PostgreSQL schemas and implement JWT authentication and authorization for application endpoints.</li>
+          <li>Integrate AI features into products through prompt engineering and LLM APIs.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="label"><i>03</i> / Projects</div>
+      <div class="project">
+        <h3>InterviewIQ <a href="https://interview-coach-3h2g.vercel.app">interview-coach-3h2g.vercel.app ↗</a></h3>
+        <p>AI interview coach: role-specific questions, answers by voice, and a written hiring verdict at the end,
+          generated with Groq.</p>
+        <div class="stackline">Next.js · TypeScript · Tailwind CSS · Supabase · Groq</div>
+      </div>
+      <div class="project">
+        <h3>This portfolio <a href="https://portfolio-sage-phi-22.vercel.app">live ↗</a></h3>
+        <p>An AI "agent" gives visitors a guided tour; physics-based stack, Claude-Code-style terminal, light/dark themes.</p>
+        <div class="stackline">Next.js 16 · React 19 · TypeScript · Tailwind CSS v4 · matter-js</div>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <section>
+      <div class="label"><i>04</i> / Stack</div>
+      <div class="group">
+        <h4>Languages</h4>
+        <div class="chips"><span class="hot">TypeScript</span><span>JavaScript</span><span>Python</span></div>
+      </div>
+      <div class="group">
+        <h4>Frontend</h4>
+        <div class="chips"><span class="hot">React</span><span class="hot">Next.js</span><span>Tailwind CSS</span><span>HTML &amp; CSS</span></div>
+      </div>
+      <div class="group">
+        <h4>Mobile</h4>
+        <div class="chips"><span class="hot">Expo</span><span>React Native</span><span>Zustand</span></div>
+      </div>
+      <div class="group">
+        <h4>Backend &amp; data</h4>
+        <div class="chips"><span class="hot">Django REST</span><span class="hot">PostgreSQL</span><span>Node.js</span><span>Express</span><span>Prisma</span><span>Supabase</span><span>REST APIs</span><span>JWT auth</span></div>
+      </div>
+      <div class="group">
+        <h4>AI &amp; automation</h4>
+        <div class="chips"><span class="hot">Claude Code</span><span>Prompt engineering</span><span>Groq</span><span>APScheduler</span></div>
+      </div>
+      <div class="group">
+        <h4>Payments &amp; infra</h4>
+        <div class="chips"><span class="hot">Paystack</span><span>Vercel</span><span>Render</span><span>Neon</span><span>Cloudinary</span><span>Cloudflare</span><span>Firebase (FCM)</span><span>Git &amp; GitHub</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="label"><i>05</i> / How I work</div>
+      <ol class="rules">
+        <li><b>Plan before I prompt.</b><span>Goal, constraints and "done" are written down before any code.</span></li>
+        <li><b>AI drafts, I review.</b><span>I read every line before it ships.</span></li>
+        <li><b>Money paths live in code.</b><span>Holds, payouts and retries are enforced and logged.</span></li>
+        <li><b>Automate the second time.</b><span>Done by hand twice becomes a script or a scheduled job.</span></li>
+      </ol>
+      <div class="motto">
+        "The path to greatness begins with an inspiration."
+        <small>— my motto</small>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<footer>
+  <span>Ugochukwuzitere Mbama · <b>CV</b></span>
+  <span>Full portfolio + StudEx case study → <b>portfolio-sage-phi-22.vercel.app</b></span>
+</footer>
+
+</body>
+</html>
