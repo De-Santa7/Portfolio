@@ -10,6 +10,8 @@
 
 /** Contact listens for this and empties the form (see Contact.tsx). */
 export const CONTACT_RESET_EVENT = "contact:reset";
+/** Contact flies the paper plane for a pretend send; nothing is sent. */
+export const CONTACT_DEMO_SEND_EVENT = "contact:demo-send";
 
 type Say = string | ((el: HTMLElement) => string);
 
@@ -98,8 +100,20 @@ const buildBeats = (): Beat[] => [
   },
   {
     sel: '#contact button[type="submit"]',
-    say: "Ready. This one's a demo, so I won't send it.",
-    hold: 2600,
+    say: "Sending… (demo)",
+    act: async (el) => {
+      // A pretend send: same plane as a real one, but no email app, no email.
+      cursor?.animate(
+        [{ transform: `translate(${cx}px, ${cy}px)` }, { transform: `translate(${cx}px, ${cy}px) scale(0.8)` }, { transform: `translate(${cx}px, ${cy}px)` }],
+        { duration: 220 },
+      );
+      el.animate([{ transform: "scale(1)" }, { transform: "scale(0.94)" }, { transform: "scale(1)" }], { duration: 220 });
+      window.dispatchEvent(new Event(CONTACT_DEMO_SEND_EVENT));
+      await sleep(1900);
+      if (aborted) return;
+      say("Sent ✈ (demo only, nothing left the page)");
+    },
+    hold: 2400,
   },
 ];
 

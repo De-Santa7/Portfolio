@@ -156,6 +156,57 @@ html.replay .agent-track { animation: agent-fly 3.6s cubic-bezier(0.65, 0, 0.35,
   100% { opacity: 0; transform: translate(calc(100% + var(--fly-x, 0px) + 30px), calc(var(--fly-y, 0px) + 30px)); }
 }
 
+/* Hero "Run the agent" button: a light runs around the border. */
+@property --agent-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.agent-cta {
+  position: relative;
+  isolation: isolate;
+  box-shadow: 0 0 24px -6px color-mix(in oklab, var(--color-accent) 55%, transparent);
+}
+.agent-cta::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--agent-angle), var(--color-line-strong) 0 55%, var(--color-accent) 80%, var(--color-line-strong) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: agent-spin 3s linear infinite;
+}
+.agent-cta:disabled::before { animation-duration: 1s; }
+@keyframes agent-spin { to { --agent-angle: 360deg; } }
+
+/* ─── Plane: "message sent" (components/ui/PaperPlane.tsx) ───────────────── */
+.plane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  offset-rotate: auto;
+  offset-anchor: 50% 50%;
+  filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.5));
+  animation: plane-fly 1.9s cubic-bezier(0.55, 0.05, 0.7, 0.35) forwards;
+}
+.plane-trail-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: trail-draw 1.9s cubic-bezier(0.55, 0.05, 0.7, 0.35) forwards;
+}
+.plane-trail { animation: trail-fade 0.9s ease 1.9s forwards; }
+@keyframes plane-fly {
+  0%   { offset-distance: 0%; opacity: 0; scale: 0.5; }
+  10%  { opacity: 1; scale: 1; }
+  100% { offset-distance: 100%; opacity: 1; scale: 1.15; }
+}
+@keyframes trail-draw { to { stroke-dashoffset: 0; } }
+@keyframes trail-fade { to { opacity: 0; } }
+
 /* Guided tour (components/ui/agentTour.ts) */
 .tour-cursor {
   position: fixed;

@@ -1,6 +1,7 @@
 import { ArrowDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SessionCard } from "@/components/ui/SessionCard";
+import { AgentReplay } from "@/components/ui/AgentReplay";
 import { hero, personal } from "@/data/portfolio";
 
 /**
@@ -9,7 +10,7 @@ import { hero, personal } from "@/data/portfolio";
  */
 export function Hero() {
   return (
-    <section id="top" className="relative isolate overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
+    <section id="top" className="relative isolate overflow-hidden pt-28 pb-20 md:pt-32 md:pb-28">
       <div aria-hidden="true" className="grid-bg absolute inset-0 -z-10" />
       <div aria-hidden="true" className="accent-glow absolute -top-40 right-[-10%] -z-10 size-[42rem] opacity-70" />
 
@@ -50,7 +51,7 @@ export function Hero() {
             {hero.sub}
           </p>
 
-          <div className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row [--d:0.2s]">
+          <div className="hero-rise mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap [--d:0.2s]">
             <Button href="/#work">
               See the work
               <ArrowDown className="size-4 transition-transform group-hover:translate-y-0.5" />
@@ -59,6 +60,7 @@ export function Hero() {
               <Download className="size-4" />
               Download CV
             </Button>
+            <AgentReplay variant="hero" className="justify-center" />
           </div>
         </div>
 

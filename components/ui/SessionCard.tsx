@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type CSSProperties } from "react";
 import { useReducedMotion } from "@/lib/useMediaQuery";
-import { AGENT_DONE_EVENT, AGENT_RUN_EVENT } from "./AgentReplay";
+import { AGENT_DONE_EVENT, AGENT_RUN_EVENT, runAgent, useAgentRunning } from "./AgentReplay";
 
 /**
  * Hero terminal styled after the Claude Code CLI: welcome box, a `>` prompt
@@ -32,6 +32,7 @@ const verbs = ["Planning", "Reading", "Writing", "Testing", "Reviewing"];
 
 export function SessionCard() {
   const reduce = useReducedMotion();
+  const agentRunning = useAgentRunning();
   const [cycle, setCycle] = useState(0); // 0 = not started; bumps restart the CSS typing
   const [shown, setShown] = useState(0); // transcript lines revealed
   const [frame, setFrame] = useState(0); // spinner frame
@@ -172,7 +173,15 @@ export function SessionCard() {
         </ol>
 
         {/* input box */}
-        <div data-agent-target className="mt-3 rounded-lg border border-line-strong px-3 py-2 text-muted">&gt;</div>
+        <button
+          type="button"
+          data-agent-target
+          onClick={runAgent}
+          disabled={agentRunning}
+          className="mt-3 block w-full rounded-lg border border-line-strong px-3 py-2 text-left text-muted transition-colors hover:border-accent hover:text-fg disabled:hover:border-line-strong"
+        >
+          &gt; {agentRunning ? "" : <span className="text-muted">click to run the agent</span>}
+        </button>
         <p className="mt-1.5 px-1 text-[11px] text-muted">? for shortcuts</p>
       </div>
     </figure>

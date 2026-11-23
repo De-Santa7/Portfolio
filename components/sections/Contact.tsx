@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { contact, personal, socials } from "@/data/portfolio";
-import { CONTACT_RESET_EVENT } from "@/components/ui/agentTour";
+import { CONTACT_DEMO_SEND_EVENT, CONTACT_RESET_EVENT } from "@/components/ui/agentTour";
+import { PaperPlane, planFlight, type Flight } from "@/components/ui/PaperPlane";
 
 function Chips({
   name,
@@ -65,7 +66,19 @@ export function Contact() {
   const [timeline, setTimeline] = useState("");
   const [who, setWho] = useState("");
   const [opened, setOpened] = useState(false);
+  const [demoSent, setDemoSent] = useState(false);
+  const [flight, setFlight] = useState<Flight | null>(null);
   const [copied, setCopied] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const sendRef = useRef<HTMLButtonElement>(null);
+
+  /** Launch the paper plane from the send button. */
+  function fly() {
+    if (!formRef.current || !sendRef.current) return;
+    const f = planFlight(formRef.current, sendRef.current);
+    setFlight(f);
+    setTimeout(() => setFlight((cur) => (cur?.id === f.id ? null : cur)), 3000);
+  }
 
   // The agent tour fills this form with a demo request; it asks us to clear it after.
   useEffect(() => {
@@ -75,9 +88,19 @@ export function Contact() {
       setTimeline("");
       setWho("");
       setOpened(false);
+      setDemoSent(false);
+    };
+    // The tour's pretend send: the plane flies, but nothing leaves the page.
+    const demoSend = () => {
+      fly();
+      setDemoSent(true);
     };
     window.addEventListener(CONTACT_RESET_EVENT, reset);
-    return () => window.removeEventListener(CONTACT_RESET_EVENT, reset);
+    window.addEventListener(CONTACT_DEMO_SEND_EVENT, demoSend);
+    return () => {
+      window.removeEventListener(CONTACT_RESET_EVENT, reset);
+      window.removeEventListener(CONTACT_DEMO_SEND_EVENT, demoSend);
+    };
   }, []);
 
   const ready = reason !== "" && what.trim().length > 0;
@@ -96,6 +119,7 @@ export function Contact() {
       who.trim() ? `— ${who.trim()}` : "",
     ].join("\n");
     window.location.href = `mailto:${personal.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    fly();
     setOpened(true);
   }
 
@@ -126,7 +150,8 @@ export function Contact() {
 
         <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
           <FadeUp>
-            <form onSubmit={submit} className="rounded-3xl border border-line bg-surface/50 p-6 sm:p-8">
+            <form ref={formRef} onSubmit={submit} className="relative rounded-3xl border border-line bg-surface/50 p-6 sm:p-8">
+              {flight && <PaperPlane flight={flight} />}
               <Question n={1} label="What brings you here?">
                 <Chips name="reason" options={contact.reasons} value={reason} onChange={setReason} />
               </Question>
@@ -167,13 +192,19 @@ export function Contact() {
 
               <div className="mt-2 flex flex-col gap-3 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-muted" aria-live="polite">
-                  {opened
-                    ? "Your email app should be open. Nothing happened? Use the address on the right."
-                    : ready
+                  {demoSent ? (
+                    <span className="text-accent">✈ Demo sent. It was only a demo, nothing left this page.</span>
+                  ) : opened ? (
+                    <>
+                      <span className="text-accent">✈ Plane&apos;s away.</span> Your email app has the draft: hit send there and
+                      it&apos;s on its way to me. Nothing opened? Use the address on the right.
+                    </>
+                  ) : ready
                       ? "Ready. You'll review the email before it's sent."
                       : "Answer 1 and 2 to continue."}
                 </p>
                 <button
+                  ref={sendRef}
                   type="submit"
                   disabled={!ready}
                   className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
