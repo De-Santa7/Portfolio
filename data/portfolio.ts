@@ -168,9 +168,9 @@ export const projects: Project[] = [
       { name: "Cloudinary", icon: "cloudinary" },
     ],
     stats: [
-      { label: "Active vendors", value: null }, // TODO: real vendor count
-      { label: "Orders processed", value: null }, // TODO: real order count
-      { label: "Registered students", value: null }, // TODO: real user count
+      { label: "Active vendors", value: "100+" },
+      { label: "Listings", value: "320+" },
+      { label: "Campuses", value: "3" },
     ],
     links: [
       { label: "Case study", href: "/work/studex", kind: "case-study" },
