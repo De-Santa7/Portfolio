@@ -331,6 +331,11 @@ html.replay .agent-track { animation: agent-fly 3.6s cubic-bezier(0.65, 0, 0.35,
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Terminal motto: each character switches on at its own delay (pure CSS),
+   so the line wraps naturally while it "types". */
+.type-char { opacity: 0; animation: type-char-on 0s linear forwards; }
+@keyframes type-char-on { to { opacity: 1; } }
+
 /* Terminal prompt typing, pure CSS: width grows one character per step. */
 .type-in {
   display: inline-block;

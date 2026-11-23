@@ -3,6 +3,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { useReducedMotion } from "@/lib/useMediaQuery";
 import { AGENT_DONE_EVENT, AGENT_RUN_EVENT, runAgent, useAgentRunning } from "./AgentReplay";
+import { about } from "@/data/portfolio";
 
 /**
  * Hero terminal styled after the Claude Code CLI: welcome box, a `>` prompt
@@ -27,6 +28,9 @@ const lines: Line[] = [
 ];
 
 const TYPE_MS = task.length * 38;
+// The finale: `echo $MOTTO`, then the motto writes itself, letter by letter.
+const MOTTO_CHAR_MS = 42;
+const MOTTO_MS = about.motto.length * MOTTO_CHAR_MS;
 const spinner = ["·", "✢", "✶", "✻", "✽", "✻", "✶", "✢"];
 const verbs = ["Planning", "Reading", "Writing", "Testing", "Reviewing"];
 
@@ -37,6 +41,7 @@ export function SessionCard() {
   const [shown, setShown] = useState(0); // transcript lines revealed
   const [frame, setFrame] = useState(0); // spinner frame
   const [typedDone, setTypedDone] = useState(false);
+  const [motto, setMotto] = useState(false); // finale shown
 
   useEffect(() => {
     if (reduce) return;
@@ -48,13 +53,16 @@ export function SessionCard() {
       if (cancelled) return;
       setCycle((c) => c + 1);
       setShown(0);
+      setMotto(false);
       let t = TYPE_MS + 500;
       for (let i = 1; i <= lines.length; i++) timers.push(setTimeout(() => setShown(i), (t += 1100)));
+      timers.push(setTimeout(() => setMotto(true), (t += 900)));
+      t += MOTTO_MS;
       if (byAgent) {
         byAgent = false;
-        timers.push(setTimeout(() => window.dispatchEvent(new Event(AGENT_DONE_EVENT)), t + 900));
+        timers.push(setTimeout(() => window.dispatchEvent(new Event(AGENT_DONE_EVENT)), t + 1000));
       }
-      timers.push(setTimeout(run, t + 4500)); // hold the finished state, then loop
+      timers.push(setTimeout(run, t + 5000)); // hold the finished state, then loop
     };
 
     // Start once the intro has lifted (data-intro="skip" means it never showed).
@@ -137,7 +145,7 @@ export function SessionCard() {
         </p>
 
         {/* transcript */}
-        <ol className="mt-3 min-h-[12.5rem] space-y-2">
+        <ol className="mt-3 min-h-[17.5rem] space-y-2">
           {lines.slice(0, n).map((l, i) => (
             <li key={i} className="animate-rise [animation-duration:0.35s]">
               {l.kind === "say" && (
@@ -164,6 +172,28 @@ export function SessionCard() {
               )}
             </li>
           ))}
+          {(reduce || motto) && (
+            <li className="pt-2">
+              <p className="animate-rise text-muted [animation-duration:0.3s]">$ echo $MOTTO</p>
+              <p className="mt-1 text-accent italic" aria-label={about.motto}>
+                <span aria-hidden="true">
+                  &ldquo;
+                  {Array.from(about.motto).map((ch, i) => (
+                    <span key={i} className="type-char" style={{ animationDelay: `${i * MOTTO_CHAR_MS}ms` }}>
+                      {ch}
+                    </span>
+                  ))}
+                  <span className="type-char" style={{ animationDelay: `${MOTTO_MS}ms` }}>
+                    &rdquo;
+                  </span>
+                  {/* cursor: appears when the typing ends, then keeps blinking */}
+                  <span className="type-char ml-0.5 inline-block align-[-0.15em]" style={{ animationDelay: `${MOTTO_MS}ms` }}>
+                    <span className="inline-block h-[1.05em] w-[0.55em] animate-blink bg-accent/80" />
+                  </span>
+                </span>
+              </p>
+            </li>
+          )}
           {working && (
             <li className="text-accent" aria-hidden="true">
               <span className="inline-block w-4">{spinner[frame]}</span>
