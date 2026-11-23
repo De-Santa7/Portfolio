@@ -2,7 +2,7 @@
  * Guided tour run by the "agent". It moves around each section, pointing at
  * the things that matter (with a focus ring), scrolling only when the next
  * target is out of view; drops and lifts the stack; then fills in the
- * contact form with an obviously fake demo request and points at "send".
+ * contact form with an example request and plays the "sent" animation.
  * It never sends anything, and it clears the demo answers when it ends.
  * Any wheel, touch, key or a click on "stop" hands control back at once.
  * Plain DOM (no React), torn down completely.
@@ -27,11 +27,13 @@ interface Beat {
   act?: (el: HTMLElement) => Promise<void>;
 }
 
+// What the agent types. It reads like a normal request; it is never sent
+// (the "send" below only plays the animation) and the form is cleared after.
 const demo = {
   reason: "A product to build",
-  what: "Demo from the agent tour: a booking app for a campus barber, web + mobile, Paystack payments.",
+  what: "A booking app for a campus barber: web and mobile, with Paystack payments.",
   timeline: "This month",
-  who: "The agent (demo, not a real request)",
+  who: "Ada, campus startup",
 };
 
 // Built on demand (the page must exist), never at import time.
@@ -71,7 +73,7 @@ const buildBeats = (): Beat[] => [
       await sleep(2200);
     },
   },
-  // Contact: fill in a fake demo request, then point at send (never press it)
+  // Contact: fill in an example request and play the send (nothing is sent)
   {
     sel: `#contact input[name="reason"][value="${demo.reason}"] + span`,
     say: "Let me fill this in for you.",
@@ -82,7 +84,7 @@ const buildBeats = (): Beat[] => [
   },
   {
     sel: "#contact textarea",
-    say: "Typing a demo request…",
+    say: "Describing the project…",
     act: async (el) => typeInto(el as HTMLTextAreaElement, demo.what),
   },
   {
@@ -100,7 +102,7 @@ const buildBeats = (): Beat[] => [
   },
   {
     sel: '#contact button[type="submit"]',
-    say: "Sending… (demo)",
+    say: "Sending…",
     act: async (el) => {
       // A pretend send: same plane as a real one, but no email app, no email.
       cursor?.animate(
@@ -111,7 +113,7 @@ const buildBeats = (): Beat[] => [
       window.dispatchEvent(new Event(CONTACT_DEMO_SEND_EVENT));
       await sleep(1900);
       if (aborted) return;
-      say("Sent ✈ (demo only, nothing left the page)");
+      say("Sent ✈");
     },
     hold: 2400,
   },

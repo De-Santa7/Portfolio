@@ -39,17 +39,15 @@ export function PaperPlane({ flight }: { flight: Flight }) {
         />
       </svg>
       <div className="plane" style={{ offsetPath: `path('${flight.path}')` } as CSSProperties}>
-        {/* Paper dart seen from above. The nose is the exact right-centre point
-            (40,12), so with offset-rotate: auto the nose always leads along
-            the path, and the tail (left edge) is where the trail comes out. */}
-        <svg viewBox="0 0 40 24" width="46" height="28">
-          {/* far wing (darker, underneath) */}
-          <path d="M40 12 L3 22 L12 12 Z" fill="color-mix(in oklab, var(--color-fg) 62%, black)" />
-          {/* near wing */}
-          <path d="M40 12 L0 1.5 L12 12 Z" fill="var(--color-fg)" />
-          {/* centre fold / keel */}
-          <path d="M40 12 L12 12 L8 15.5 Z" fill="var(--color-accent)" />
-          <path d="M40 12 L0 1.5 L12 12 L3 22 Z" fill="none" stroke="var(--color-bg)" strokeWidth="0.8" strokeLinejoin="round" />
+        {/* The original paper-plane drawing, whose nose points up-right (~45°).
+            Rotated +45° so the nose points straight along +x: with
+            offset-rotate: auto it then always leads along the path. */}
+        <svg viewBox="0 0 32 32" width="36" height="36">
+          <g transform="rotate(45 16 16)">
+            <path d="M2 15.5 30 4 22 28l-7.5-7.2L2 15.5Z" fill="var(--color-fg)" stroke="var(--color-bg)" strokeWidth="1" strokeLinejoin="round" />
+            <path d="M14.5 20.8 30 4 11 18.2l3.5 2.6Z" fill="var(--color-accent)" />
+            <path d="M14.5 20.8 13.6 27l3.6-3.6" fill="color-mix(in oklab, var(--color-fg) 70%, black)" />
+          </g>
         </svg>
       </div>
     </div>

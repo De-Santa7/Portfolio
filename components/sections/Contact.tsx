@@ -193,7 +193,7 @@ export function Contact() {
               <div className="mt-2 flex flex-col gap-3 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-muted" aria-live="polite">
                   {demoSent ? (
-                    <span className="text-accent">✈ Demo sent. It was only a demo, nothing left this page.</span>
+                    <span className="text-accent">✈ Message sent.</span>
                   ) : opened ? (
                     <>
                       <span className="text-accent">✈ Plane&apos;s away.</span> Your email app has the draft: hit send there and
