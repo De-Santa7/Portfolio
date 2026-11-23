@@ -131,9 +131,20 @@ function sleep(ms: number) {
   return new Promise<void>((r) => setTimeout(r, reduce ? Math.min(ms, 500) : ms));
 }
 
+/** Keep the bubble inside the viewport: shift it left near the right edge. */
+function placeBubble() {
+  if (!bubble || !bubble.textContent) return;
+  const margin = 12;
+  const w = bubble.offsetWidth;
+  const ideal = 18; // just right of the arrow
+  const left = Math.max(margin - cx, Math.min(ideal, window.innerWidth - margin - cx - w));
+  bubble.style.left = `${left}px`;
+}
+
 function say(text: string) {
   if (!bubble) return;
   bubble.textContent = text;
+  placeBubble();
   if (text) bubble.animate([{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 220 });
 }
 
@@ -192,6 +203,8 @@ function scrollToY(y: number): Promise<void> {
 /** Glide to (x, y) along a slight arc, with speed scaled to distance. */
 async function moveCursor(x: number, y: number) {
   if (!cursor) return;
+  // Never aim off-screen (narrow phones, wide elements).
+  x = Math.max(12, Math.min(x, window.innerWidth - 28));
   const dist = Math.hypot(x - cx, y - cy);
   const mx = (x + cx) / 2;
   const my = (y + cy) / 2 - Math.min(60, dist * 0.15);

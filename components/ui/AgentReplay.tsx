@@ -139,11 +139,13 @@ export function AgentReplay({
         type="button"
         onClick={start}
         disabled={isRunning}
-        className={`agent-cta group inline-flex items-center gap-2.5 rounded-full bg-surface px-5 py-3 font-mono text-sm text-fg transition-colors hover:bg-surface-2 disabled:opacity-70 ${className}`}
+        className={`agent-cta group inline-flex flex-col items-center justify-center gap-0.5 rounded-full bg-surface px-5 py-3 font-mono text-sm text-fg transition-colors hover:bg-surface-2 disabled:opacity-70 ${className}`}
       >
-        {pulse || star}
-        <span className="font-semibold">{isRunning ? "agent at work…" : "Run the agent"}</span>
-        {!isRunning && <span className="text-muted sm:hidden">· it&apos;ll give you a tour</span>}
+        <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+          {pulse || star}
+          <span className="font-semibold">{isRunning ? "agent at work…" : "Run the agent"}</span>
+        </span>
+        {!isRunning && <span className="text-[11px] leading-tight text-muted sm:hidden">it&apos;ll give you a guided tour</span>}
       </button>
     );
   }

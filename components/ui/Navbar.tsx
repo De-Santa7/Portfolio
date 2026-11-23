@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { personal } from "@/data/portfolio";
 import { AgentReplay } from "./AgentReplay";
+import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   { label: "Work", href: "/#work" },
@@ -68,6 +69,9 @@ export function Navbar() {
             </li>
           )}
           <li>
+            <ThemeToggle className="size-9" />
+          </li>
+          <li>
             <Link
               href="/#contact"
               className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover"
@@ -77,16 +81,19 @@ export function Navbar() {
           </li>
         </ul>
 
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="grid size-10 place-items-center rounded-full border border-line-strong text-fg md:hidden"
+          className="grid size-10 place-items-center rounded-full border border-line-strong text-fg"
         >
           {open ? <X className="size-4" /> : <Menu className="size-4" />}
         </button>
+        </div>
       </nav>
 
       {open && (

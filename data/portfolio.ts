@@ -118,6 +118,7 @@ export const about = {
     "What I want to do more of: automation that takes real, repetitive work off people's plates, built with the same care as the product around it.",
   ],
   current: "Founder & full-stack developer, StudEx",
+  motto: "The path to greatness begins with an inspiration.",
 };
 
 // ─── How I work ──────────────────────────────────────────────────────────────

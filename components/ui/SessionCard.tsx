@@ -11,7 +11,7 @@ import { AGENT_DONE_EVENT, AGENT_RUN_EVENT, runAgent, useAgentRunning } from "./
  * no invented numbers or file names.
  */
 
-const task = "retry failed vendor payouts automatically";
+const task = "auto-retry failed payouts"; // short enough to type on one line on a phone
 
 type Line =
   | { kind: "say"; text: string }
@@ -91,7 +91,7 @@ export function SessionCard() {
 
   return (
     <figure
-      className="hero-rise relative w-full overflow-hidden rounded-xl border border-line-strong bg-[#0d0d0e] font-mono text-[12.5px] leading-relaxed shadow-2xl shadow-black/50 sm:text-[13px] [--d:0.35s]"
+      className="theme-dark hero-rise relative w-full overflow-hidden rounded-xl border border-line-strong bg-[#0d0d0e] font-mono text-[12.5px] leading-relaxed shadow-2xl shadow-black/50 sm:text-[13px] [--d:0.35s]"
       aria-label="Illustration: how a typical task runs with Claude Code"
     >
       {/* window chrome */}

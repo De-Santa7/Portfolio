@@ -9,7 +9,7 @@ export function Terminal({
   className?: string;
 }) {
   return (
-    <div className={`overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl shadow-black/40 ${className}`}>
+    <div className={`theme-dark overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl shadow-black/40 ${className}`}>
       <div className="flex items-center gap-2 border-b border-line bg-surface-2 px-4 py-3">
         <span className="size-2.5 rounded-full bg-[#ff5f57]/80" />
         <span className="size-2.5 rounded-full bg-[#febc2e]/80" />

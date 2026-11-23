@@ -49,8 +49,9 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-// Runs before first paint: skip the intro on repeat visits and for reduced motion.
-const introScript = `try{var d=document.documentElement;if(sessionStorage.getItem('intro')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.intro='skip'}sessionStorage.setItem('intro','1')}catch(e){}`;
+// Runs before first paint: pick the theme (?theme= link, saved choice, else
+// dark) and skip the intro on repeat visits and for reduced motion.
+const introScript = `try{var d=document.documentElement;var q=new URLSearchParams(location.search).get('theme');var t=q==='light'||q==='dark'?q:localStorage.getItem('theme');if(t==='light')d.dataset.theme='light';if(sessionStorage.getItem('intro')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.intro='skip'}sessionStorage.setItem('intro','1')}catch(e){}`;
 
 const personJsonLd = {
   "@context": "https://schema.org",

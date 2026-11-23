@@ -28,6 +28,9 @@ export function About() {
               ))}
             </div>
 
+            <Prompt>cat motto.txt</Prompt>
+            <p className="text-accent italic">&ldquo;{about.motto}&rdquo;</p>
+
             <Prompt>echo $LOCATION</Prompt>
             <p className="text-fg">
               {personal.location} <span className="text-muted">({personal.timezone})</span>
