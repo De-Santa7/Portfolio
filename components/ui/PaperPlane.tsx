@@ -56,21 +56,35 @@ export function PaperPlane({ flight }: { flight: Flight }) {
 
 /**
  * Builds a flight path in the container's pixel space: the plane leaves the
- * send button heading right, dips a touch as it's launched, climbs, and
- * flies off past the right edge of the screen.
+ * send button heading right, levels out, pulls up into a full vertical loop
+ * (upside down over the top, nose leading the whole way), comes out level,
+ * then climbs away past the right edge of the screen.
  */
 export function planFlight(container: HTMLElement, from: HTMLElement): Flight {
   const c = container.getBoundingClientRect();
   const b = from.getBoundingClientRect();
+  const r = (n: number) => Math.round(n);
   const x = b.left - c.left + b.width / 2;
   const y = b.top - c.top + b.height / 2;
-  const toScreenEdge = window.innerWidth - (c.left + x);
-  const ex = x + Math.max(420, toScreenEdge + 160);
-  const ey = y - Math.min(460, Math.max(300, ex - x) * 0.55);
-  const r = (n: number) => Math.round(n);
+
+  // Loop entry: level flight, a little right of and above the button.
+  const R = 62; // loop radius
+  const ax = x + 190;
+  const ay = y - 55;
+  const drift = 26; // real loops come out a bit further along
+
+  const toScreenEdge = window.innerWidth - (c.left + ax);
+  const ex = ax + Math.max(360, toScreenEdge + 160);
+  const ey = ay - Math.min(420, Math.max(260, ex - ax) * 0.5);
+
   const path =
     `M ${r(x)} ${r(y)} ` +
-    `C ${r(x + 60)} ${r(y + 22)}, ${r(x + 150)} ${r(y + 12)}, ${r(x + 230)} ${r(y - 45)} ` +
-    `S ${r(ex - 150)} ${r(ey + 110)}, ${r(ex)} ${r(ey)}`;
+    // launch: slight dip, then level out heading right (horizontal tangent at entry)
+    `C ${r(x + 60)} ${r(y + 20)}, ${r(ax - 90)} ${r(ay)}, ${r(ax)} ${r(ay)} ` +
+    // the loop: up the right side, over the top (upside down), down the left side
+    `A ${R} ${R} 0 0 0 ${r(ax + drift / 2)} ${r(ay - 2 * R)} ` +
+    `A ${R} ${R} 0 0 0 ${r(ax + drift)} ${r(ay)} ` +
+    // out of the loop level, then climb away
+    `C ${r(ax + drift + 110)} ${r(ay)}, ${r(ex - 150)} ${r(ey + 110)}, ${r(ex)} ${r(ey)}`;
   return { path, w: r(c.width), h: r(c.height), id: Date.now() };
 }

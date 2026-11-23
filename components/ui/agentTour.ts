@@ -111,7 +111,7 @@ const buildBeats = (): Beat[] => [
       );
       el.animate([{ transform: "scale(1)" }, { transform: "scale(0.94)" }, { transform: "scale(1)" }], { duration: 220 });
       window.dispatchEvent(new Event(CONTACT_DEMO_SEND_EVENT));
-      await sleep(1900);
+      await sleep(2600); // let the plane finish its loop
       if (aborted) return;
       say("Sent ✈");
     },

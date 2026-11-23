@@ -77,7 +77,7 @@ export function Contact() {
     if (!formRef.current || !sendRef.current) return;
     const f = planFlight(formRef.current, sendRef.current);
     setFlight(f);
-    setTimeout(() => setFlight((cur) => (cur?.id === f.id ? null : cur)), 3000);
+    setTimeout(() => setFlight((cur) => (cur?.id === f.id ? null : cur)), 4200);
   }
 
   // The agent tour fills this form with a demo request; it asks us to clear it after.
