@@ -9,7 +9,28 @@ export const AGENT_RUN_EVENT = "agent:run";
 export const AGENT_DONE_EVENT = "agent:done";
 
 const FLY_ARRIVES_MS = 550 + 3600 * 0.78; // agent-fly delay + time to the "click" keyframe
+const FLY_LEAVES_MS = 550 + 3600 * 0.4; // cursor leaves the word (agent-fly 40%)
+const FLY_SCROLL_MS = 3600 * 0.32; // …and reaches the terminal at 72%
 const RAN_KEY = "agent-ran";
+
+/** Eased scroll with a set duration (CSS smooth scroll can't be timed). */
+function glideTo(y: number, ms: number) {
+  const root = document.documentElement;
+  const from = window.scrollY;
+  const to = Math.max(0, Math.min(y, root.scrollHeight - window.innerHeight));
+  if (ms <= 0 || Math.abs(to - from) < 2) return window.scrollTo(0, to);
+  const prev = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  const start = performance.now();
+  const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const frame = (now: number) => {
+    const t = Math.min(1, (now - start) / ms);
+    window.scrollTo(0, from + (to - from) * ease(t));
+    if (t < 1) requestAnimationFrame(frame);
+    else root.style.scrollBehavior = prev;
+  };
+  requestAnimationFrame(frame);
+}
 
 // ─── Shared state: every "run the agent" control reflects the same run ───────
 let running = false;
@@ -75,6 +96,17 @@ export function runAgent() {
     root.classList.remove("replay");
     void root.offsetWidth; // restart the CSS animations
     root.classList.add("replay");
+
+    // Phones: the terminal sits below the headline, off-screen. Follow the
+    // cursor down while it flies, so the session plays where it can be seen.
+    // (--fly-x/y are page offsets, so the cursor still lands on the input.)
+    const card = target.closest("figure") ?? target;
+    const c = card.getBoundingClientRect();
+    const vh = window.innerHeight;
+    if (c.bottom > vh - 8) {
+      const y = window.scrollY + Math.min(c.bottom - vh + 16, c.top - 72); // 72: clear the navbar
+      setTimeout(() => glideTo(y, reduce ? 0 : FLY_SCROLL_MS), reduce ? 0 : FLY_LEAVES_MS);
+    }
 
     setTimeout(() => {
       target.animate(
