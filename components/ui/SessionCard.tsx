@@ -103,7 +103,7 @@ export function SessionCard() {
       aria-label="Illustration: how a typical task runs with Claude Code"
     >
       {/* window chrome */}
-      <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-line px-4 py-2 sm:py-2.5">
         <div className="flex items-center gap-2">
           <span className="size-2.5 rounded-full bg-[#ff5f57]/80" />
           <span className="size-2.5 rounded-full bg-[#febc2e]/80" />
@@ -115,18 +115,20 @@ export function SessionCard() {
         </span>
       </div>
 
-      <div className="p-4 sm:p-5">
+      {/* Phones: tighter spacing and no cwd/shortcuts lines, so the whole card
+          fits on screen when the agent scrolls down to it. */}
+      <div className="p-3.5 sm:p-5">
         {/* welcome box */}
-        <div className="rounded-lg border border-accent/70 px-4 py-3">
+        <div className="rounded-lg border border-accent/70 px-4 py-2.5 sm:py-3">
           <p className="text-fg">
             <span className="text-accent">✻</span> zitere&apos;s workspace
           </p>
-          <p className="mt-2 pl-4 text-muted">how I build: Claude Code + me</p>
-          <p className="pl-4 text-muted">cwd: ~/studex</p>
+          <p className="mt-1 pl-4 text-muted sm:mt-2">how I build: Claude Code + me</p>
+          <p className="hidden pl-4 text-muted sm:block">cwd: ~/studex</p>
         </div>
 
         {/* prompt */}
-        <p className="mt-4 text-fg">
+        <p className="mt-3 text-fg sm:mt-4">
           <span className="text-muted">&gt; </span>
           {reduce ? (
             task
@@ -145,7 +147,8 @@ export function SessionCard() {
         </p>
 
         {/* transcript */}
-        <ol className="mt-3 min-h-[17.5rem] space-y-2">
+        {/* min-h = the finished transcript (motto included), so the card never grows */}
+        <ol className="mt-2 min-h-[19.25rem] space-y-1.5 sm:mt-3 sm:min-h-[17.5rem] sm:space-y-2">
           {lines.slice(0, n).map((l, i) => (
             <li key={i} className="animate-rise [animation-duration:0.35s]">
               {l.kind === "say" && (
@@ -212,7 +215,7 @@ export function SessionCard() {
         >
           &gt; {agentRunning ? "" : <span className="text-muted">click to run the agent</span>}
         </button>
-        <p className="mt-1.5 px-1 text-[11px] text-muted">? for shortcuts</p>
+        <p className="mt-1.5 hidden px-1 text-[11px] text-muted sm:block">? for shortcuts</p>
       </div>
     </figure>
   );
